@@ -70,12 +70,11 @@ def sessionDispersion():
 
 #3 教室與人數有剛好match    
 def capacityDifference(rCapacity,cCapacity):
-    d=rCapacity-cCapacity
+    d=abs(rCapacity-cCapacity)
     print("d")    #要想一個更好的量化方式嗎？還是就以差值為主？
     
 #4 課程數量：下午>早上>晚上
-def courseArrangement():
-	k=15
+def courseArrangement(schedule, k):
 	periodSum=[]
 	temp=0
 	for i, x in enumerate(schedule):
