@@ -16,13 +16,35 @@ schedule=
 
 #initial schedule 預設為空直
 schedule=[]
-for i in range(45):
+for i in range(session):
     schedule.append('')
 
 #1 教授單日授課集中度(例如：老師一天從早上直接上課到晚上)
-def dailyConcentration():
+"""
+Input: schedule(list), 含授課教師課程細節的courseDetail(dictionary)
 
-    print("concentration")
+Output: dailyConc(number) 0~100分
+"""
+def dailyConcentration(schedule, courseDetail):
+	tschedule=[] #儲存老師名字的課表
+	tname={} #儲存有授課的老師名字列表(不重複set)
+
+	for x in schedule:
+		if x!='':	#有課
+			tschedule.append(courseDetail[x])
+			tname.add(courseDetail[x])
+		else:		#沒課
+			tschedule.append('')
+	#########################卡住了...需思考如何使用k設計條件單日授課量###########################
+	for y in tname: #在課表中搜尋所有老師的名字
+		for z in schedule:
+			if courseDetail[z]==y: #這堂課是這個老師授課的
+				courseNum=courseNum+1
+		    while "條件": #每三個加總一次，存到list中，courseNum歸零
+		    	periodlist.append(courseNum)
+		    	courseNum=0
+		    	pass
+    dailyConc
 
 
 #2 每段時間的課程離散度(取各Period課程數的平方和計算)
@@ -41,10 +63,7 @@ def sessionDispersion(schedule, roomNum):
 	for i, x in enumerate(schedule):
 	    if x!='' #有課
 	        courseNum=courseNum+1
-	        print(i,'TRUE')
-	    else:    #沒課
-	        print(i,'FALSE')
-	    while i%3==2: #每三個加總一次，存到list中，courseNum歸零
+	    while i%roomNum==roomNum-1: #每三個加總一次，存到list中，courseNum歸零
 	    	periodlist.append(courseNum)
 	    	courseNum=0
 	    	pass
