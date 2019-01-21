@@ -72,7 +72,7 @@ dailyConcentration(schedule, courseDetail)
 Input: 課表schedule(list), 教室數量roomNum(number)
 Output: 課程離散度sdisp(number) 0~100分
 """
-def sessionDispersion(schedule, roomNum):
+def sessionDispersion(schedule, roomNum, totalCourseNum):
 	courseNum=0
 	periodlist=[] #每個中period的課程數量
 	for i, x in enumerate(schedule):
@@ -84,8 +84,12 @@ def sessionDispersion(schedule, roomNum):
 			pass
 	squaresum=sum(i*i for i in periodlist) #平方和
 	###需改良為可變動的公式###
-	maxdiv=roomNum*roomNum*10
-	mindiv=(roomNum-1)*(roomNum-1)*15 
+	if totalCourseNum>=session:
+		fulfilledmax=session/roomNum
+	else:
+		fulfilledmax=totalCourseNum/roomNum
+	maxdiv=roomNum*roomNum*(fulfilledmax) 
+	mindiv=(roomNum-1)*(roomNum-1)*fulfilledmin 
 	dividends=maxdiv-mindiv
 	###
 	sdisp=(squaresum-mindiv)/dividends*100 #量化為0~100分
