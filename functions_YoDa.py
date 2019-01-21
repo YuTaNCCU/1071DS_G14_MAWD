@@ -1,3 +1,14 @@
+# In[] 
+import pandas as pd
+import numpy as np
+#讀取courseDetail
+courseDetail = pd.read_csv('data/course.csv')[['course code', 'Number of students', 'instructor']]
+courseDetail['course code']=courseDetail['course code'].astype(str)
+RoomDetail = pd.read_csv('data/classroom.csv')[['classroom', 'cr_capacity']]
+#initial schedule 預設為空直
+schedule=[]
+for i in range(session):
+    schedule.append('')
 #variables
 roomNum=3 #教室數量
 weekdays=5 #上課日子
@@ -6,7 +17,6 @@ period=weekdays*dailyParts #15 一個weekdays中，不分教室的區塊總數
 session=roomNum*weekdays*dailyParts #45 一個weekdays中，空教室的總數(一維陣列的長度)
 k=weekdays*roomNum #15 [早上、下午、晚上] 一個part中的session數(索引調整參數)
 totalCourseNum=30
-# In[] 
 # testing data
 """
 schedule=['306000001','','306008001','','','306016002','356425001','','306016012','307873001','','307867001','307942001','','307870001',
@@ -14,17 +24,8 @@ schedule=['306000001','','306008001','','','306016002','356425001','','306016012
 '307932001','','356822001','','356389001','356019001','356564001','','307901001','356813001','','356808001','','','']
 """
 
-#initial schedule 預設為空直
-schedule=[]
-for i in range(session):
-    schedule.append('')
 # In[] 
 #1 教授單日授課集中度(例如：老師一天從早上直接上課到晚上)
-import pandas as pd
-import numpy as np
-#讀取courseDetail
-courseDetail = pd.read_csv('data/course.csv')[['course code', 'Number of students', 'instructor']]
-courseDetail['course code']=courseDetail['course code'].astype(str)
 """
 Input: schedule(list), 含授課教師課程細節的courseDetail(dictionary)
 
@@ -124,9 +125,8 @@ Input:
 一維度課表schedule(list), 計算索引的參數k(number)
 Output: 人限差距分數cdiffscore(number) 0~100分
 """
-def capacityDifference(schedule): 
+def capacityDifference(schedule, RoomDetail): 
     #生成45個session對應的教室
-    RoomDetail = pd.read_csv('data/classroom.csv')[['classroom', 'cr_capacity']]
     RoomCapacityList = list(RoomDetail.cr_capacity)  #[60, 70, 80]
     RoomCapacityList = RoomCapacityList * ( weekdays * dailyParts) #[60, 70, 80, 60, 70, 80, 60, 70, 80, 60, 70, 80, 60, 70, 80, 60, 70, 80, 60, 70, 80, 60, 70, 80, 60, 70, 80, 60, 70, 80, 60, 70, 80, 60, 70, 80, 60, 70, 80, 60, 70, 80, 60, 70, 80]
     RoomCapacityList = pd.DataFrame({ 'RoomCapacity': RoomCapacityList})
@@ -171,11 +171,16 @@ def courseArrangement(schedule, k):
 		if(i%k==k-1):
 			periodSum.append(temp)
 			temp=0
-	print(periodSum)  #course number list [morning, afternoon, eveneing]
-	return periodSum[1]/(sum(periodSum))  #下午period數除以全部period數，越大越好
+	periodSum  #course number list [morning, afternoon, eveneing]
+	weights=[0.3, 0.5, 0.2]
+	result=0
+	for i, p in enumerate(periodSum):
+	    result=result+p*weights[i]
+	return (result/sum(periodSum)*100)  #加權period數除以全部period數，0~100分越大越好
 
-
-
+schedule=['306000001','','','','','','','','','','','','','','',
+ '','307857001','','','','','','','','','356395001','','','','306737001',
+'307932001','','356822001','','','','','','','','','','','','']
 # In[] 執行函數
 #3
 rCapacity=40
