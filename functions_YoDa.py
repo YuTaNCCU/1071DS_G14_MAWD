@@ -164,3 +164,8 @@ schedule=['306000001','','','','','','','','','','','','','','',
 '307932001','','356822001','','','','','','','','','','','','']
 courseArrangement(schedule, k)
 
+# In[]
+# Objective Function
+def oj(schedule,courseDetail, roomNum, k):
+	weight=[50, 25, 15, 5]
+	value=weight[0]*dailyConcentration(schedule, courseDetail)+weight[1]*sessionDispersion(schedule, roomNum)+weight[2]*capacityDifference(schedule)+weight[3]*courseArrangement(schedule, k)
