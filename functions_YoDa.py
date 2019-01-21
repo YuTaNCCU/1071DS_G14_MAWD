@@ -102,14 +102,17 @@ def courseArrangement(schedule, k):
 	periodSum=[]
 	temp=0
 	for i, x in enumerate(schedule):
-	    if x!='': #有課
-	        temp=temp+1
-	        #print(i,'TRUE')
-	    else:    #沒課
-	        print(i,'FALSE')
-	    if(i%k==k-1):
-	        periodSum.append(temp)
-	return periodSum #course number list [morning, afternoon, eveneing]
+		if x!='': #有課
+			temp=temp+1
+		if(i%k==k-1):
+			periodSum.append(temp)
+			temp=0
+	print(periodSum)  #course number list [morning, afternoon, eveneing]
+	return periodSum[1]/(sum(periodSum))  #下午period數除以全部period數，越大越好
+
+schedule=['306000001','','','','','','','','','','','','','','',
+ '','307857001','','','','','','','','','356395001','','','','306737001',
+'307932001','','356822001','','','','','','','','','','','','']
 
 courseArrangement(schedule, k)
 
