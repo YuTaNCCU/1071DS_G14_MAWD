@@ -34,7 +34,7 @@ Output: dailyConc(number) 0~100分 : (number of sessions - number of days + 1)/ 
 def dailyConcentration(schedule, courseDetail):
     #LEFT JOIN (schedule 與 courseDetail)
     schedule_Detail =  pd.DataFrame(schedule.copy(),  columns=['course code'])
-    schedule_Detail['course code']=schedule_ValueInstructor['course code'].astype(str)
+    schedule_Detail['course code']=schedule_Detail['course code'].astype(str)
     schedule_Detail = pd.merge(schedule_Detail, courseDetail, how='left', on='course code')
 
     #生成45個session對應的Weekday
@@ -49,18 +49,18 @@ def dailyConcentration(schedule, courseDetail):
     schedule_Detail = pd.concat([schedule_Detail, WeekdayList], axis=1)
     
     #計算各個老師的一週上課堂數、上課天數
-    instructorReport = schedule_Detail.groupby('instructor', 'weekday').agg({"course code":'count', "weekday": pd.Series.nunique}).copy()
-    instructorReport['instructor'] = instructorReport.index
-    instructorReport.reset_index(level=0,drop=True, inplace=True)
-    instructorReport.columns = ['NumberofSessions', 'NmberofDays', 'instructor']
-    instructorReport
+    instructorReport = schedule_Detail.groupby(['instructor', 'weekday']).agg({"course code":'count'}).copy()
+    instructorReport = instructorReport.reset_index()
     
-    #計算各個老師的分數：(number of sessions - number of days + 1)/ number of sessions
-    instructorScore = (instructorReport.NumberofSessions - instructorReport.NmberofDays  + 1)/ instructorReport.NumberofSessions
-    ##最小1/5需轉換成0~100分的機制 或是改為計算一天一天的集中度
-    print(instructorScore)
-    return instructorScore.mean()*100
+    #計算各個老師的一週各天的集中度（一天的授課堂數/dailyParts）> 再各天平均
+    instructorReport = instructorReport.groupby('instructor').agg({"course code" : lambda x: np.mean(x/dailyParts)}).copy()
+    
+    #回傳每一位老師平均集中度的平均值 > 再 （100-集中度）
+    return (100 - instructorReport['course code'].mean()*100)
 
+schedule=['306000001','','','356461001','','','','','','','','','','','',
+ '','307857001','','','','','','','','','356395001','','','','306737001',
+'307932001','','356822001','','','','','','','','','','','','']
 dailyConcentration(schedule, courseDetail)
 
 
@@ -182,6 +182,7 @@ schedule=['306000001','','','','','','','','','','','','','','',
  '','307857001','','','','','','','','','356395001','','','','306737001',
 '307932001','','356822001','','','','','','','','','','','','']
 # In[] 執行函數
+
 #3
 rCapacity=40
 cCapacity=60
