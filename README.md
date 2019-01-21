@@ -2,6 +2,9 @@
 
 決策科學 final
 ===
+Google Doc 共編
+https://docs.google.com/document/d/18crK7lUqpjKy1OtneuQHkQyf6lldcqRK5JMGlJIwJc0/edit?fbclid=IwAR05wxzy7KdWIRah29iPHdlDQAeoBxvySg0IDsFB0rpDbo4vfNTpEdnXwgs
+===
 程式碼共編
 https://colab.research.google.com/drive/1__JM4b3cDpwIyptyBWbpMLkKv9UO2kIu?fbclid=IwAR3TDHKTH2o-H3kcKI8-kDz2xa9M3JNnRgSwpcp3rG810q5pmFYW_Uzja7s#scrollTo=515qI2zaWd3c
 
