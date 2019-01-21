@@ -5,6 +5,7 @@ dailyParts=3 #parts=將一天劃分為[早上、下午、晚上]
 period=weekdays*dailyParts #15 一個weekdays中，不分教室的區塊總數
 session=roomNum*weekdays*dailyParts #45 一個weekdays中，空教室的總數(一維陣列的長度)
 k=weekdays*roomNum #15 [早上、下午、晚上] 一個part中的session數(索引調整參數)
+totalCourseNum=30
 # In[] 
 # testing data
 """
@@ -47,7 +48,7 @@ def dailyConcentration(schedule, courseDetail):
     schedule_Detail = pd.concat([schedule_Detail, WeekdayList], axis=1)
     
     #計算各個老師的一週上課堂數、上課天數
-    instructorReport = schedule_Detail.groupby('instructor').agg({"course code":'count', "weekday": pd.Series.nunique}).copy()
+    instructorReport = schedule_Detail.groupby('instructor', 'weekday').agg({"course code":'count', "weekday": pd.Series.nunique}).copy()
     instructorReport['instructor'] = instructorReport.index
     instructorReport.reset_index(level=0,drop=True, inplace=True)
     instructorReport.columns = ['NumberofSessions', 'NmberofDays', 'instructor']
@@ -55,6 +56,7 @@ def dailyConcentration(schedule, courseDetail):
     
     #計算各個老師的分數：(number of sessions - number of days + 1)/ number of sessions
     instructorScore = (instructorReport.NumberofSessions - instructorReport.NmberofDays  + 1)/ instructorReport.NumberofSessions
+    ##最小1/5需轉換成0~100分的機制 或是改為計算一天一天的集中度
     print(instructorScore)
     return instructorScore.mean()*100
 
@@ -68,7 +70,6 @@ dailyConcentration(schedule, courseDetail)
 以30堂課來排
 最小15個時段都兩門=15*2^2=60
 最大10個時段有3門=10*3^2=90
-
 Input: 課表schedule(list), 教室數量roomNum(number)
 Output: 課程離散度sdisp(number) 0~100分
 """
@@ -83,17 +84,43 @@ def sessionDispersion(schedule, roomNum, totalCourseNum):
 			courseNum=0
 			pass
 	squaresum=sum(i*i for i in periodlist) #平方和
-	###需改良為可變動的公式###
-	if totalCourseNum>=session:
-		fulfilledmax=session/roomNum
-	else:
+"""
+period=15
+roomNum=3 代表可填入0~3，最多45(session)
+#fulfilledmax
+(1)課程總數小於period數:
+	填不滿
+	有09堂課(totalCourseNum)要填入會有幾個3(最大可填入的值=roomNum)? A: 3=9/3(totalCourseNum/roomNum) 
+	有10堂課(totalCourseNum)要填入會有幾個3(最大可填入的值=roomNum)? A: 3=10/3(totalCourseNum/roomNum) 餘1
+	有11堂課(totalCourseNum)要填入會有幾個3(最大可填入的值=roomNum)? A: 3=11/3(totalCourseNum/roomNum) 餘2
+(2)課程總數大於period數 & 不超過session總數：
+	有30堂課(totalCourseNum)要填入會有幾個3(最大可填入的值=roomNum)? A: 10=30/3(totalCourseNum/roomNum)
+	有31堂課(totalCourseNum)要填入會有幾個3(最大可填入的值=roomNum)? A: 10=31/3(totalCourseNum/roomNum) 餘1
+	有32堂課(totalCourseNum)要填入會有幾個3(最大可填入的值=roomNum)? A: 10=32/3(totalCourseNum/roomNum) 餘2
+(3)超過session總數：
+	爆掉了，會有課程填不進去，不符合我們嚴格限制，故不考慮
+#fulfilledmin
+計算最分散最小的情況
+(1)課程數小於period數:
+	都填入1
+	有11堂課(totalCourseNum)要填入會有幾個1(最小可填入的值=1)? A: =11totalCourseNum
+(2)課程總數大於period數 & 不超過session總數
+	(總課程數/區塊)^2*區塊	
+	有30堂課(totalCourseNum)要填入會有幾個2(最分散)?			A: =15
+"""	
+	if totalCourseNum<period:
 		fulfilledmax=totalCourseNum/roomNum
-	maxdiv=roomNum*roomNum*(fulfilledmax) 
-	mindiv=(roomNum-1)*(roomNum-1)*fulfilledmin 
+		mindiv=1
+	else if totalCourseNum>=session:
+		fulfilledmax=session/roomNum
+		mindiv=totalCourseNum/period 
+	else:
+		mindiv=totalCourseNum/period 
+
 	dividends=maxdiv-mindiv
-	###
 	sdisp=(squaresum-mindiv)/dividends*100 #量化為0~100分
 	sdisp
+	
 # In[] 
 #3 教室與人數有剛好match    
 """
