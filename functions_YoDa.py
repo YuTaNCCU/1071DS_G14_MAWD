@@ -19,8 +19,6 @@ for i in range(session):
     schedule.append('')
 # In[] 
 #1 教授單日授課集中度(例如：老師一天從早上直接上課到晚上)
-
-
 import pandas as pd
 import numpy as np
 #讀取courseDetail
@@ -38,19 +36,11 @@ def dailyConcentration(schedule, courseDetail):
     schedule_Detail = pd.merge(schedule_Detail, courseDetail, how='left', on='course code')
 
     #生成45個session對應的Weekday
-    WeekdayList=[]
-    for i in range(session):
-        print(i,':')
-        if i%15 in [0,1,2]:
-            WeekdayList.append(1)
-        elif i%15 in [3,4,5]:
-            WeekdayList.append(2)
-        elif i%15 in [6,7,8]:
-            WeekdayList.append(3)
-        elif i%15 in [9,10,11]:
-            WeekdayList.append(4)
-        elif i%15 in [12,13,14]:
-            WeekdayList.append(5)
+    WeekdayList=[1,2,3,4,5]
+    WeekdayList=(WeekdayList * roomNum)
+    WeekdayList.sort() #[1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5]
+    WeekdayList=(WeekdayList * dailyParts)
+    WeekdayList #[1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5]
     WeekdayList = pd.DataFrame({ 'weekday': WeekdayList})
     
     #schedule右邊新增一欄Weekday
@@ -66,9 +56,11 @@ def dailyConcentration(schedule, courseDetail):
     #計算各個老師的分數：(number of sessions - number of days + 1)/ number of sessions
     instructorScore = (instructorReport.NumberofSessions - instructorReport.NmberofDays  + 1)/ instructorReport.NumberofSessions
     print(instructorScore)
-    return instructorScore.mean()
+    return instructorScore.mean()*100
 
 dailyConcentration(schedule, courseDetail)
+
+
 # In[] 
 #2 每段時間的課程離散度(取各Period課程數的平方和計算)
 """
@@ -84,12 +76,12 @@ def sessionDispersion(schedule, roomNum):
 	courseNum=0
 	periodlist=[] #每個中period的課程數量
 	for i, x in enumerate(schedule):
-	    if x!='' #有課
-	        courseNum=courseNum+1
-	    while i%roomNum==roomNum-1: #每三個加總一次，存到list中，courseNum歸零
-	    	periodlist.append(courseNum)
-	    	courseNum=0
-	    	pass
+		if x != '' #有課
+			courseNum=courseNum+1
+		while i%roomNum==roomNum-1: #每三個加總一次，存到list中，courseNum歸零
+			periodlist.append(courseNum)
+			courseNum=0
+			pass
 	squaresum=sum(i*i for i in periodlist) #平方和
 	###需改良為可變動的公式###
 	maxdiv=roomNum*roomNum*10
@@ -109,13 +101,24 @@ Output: 人限差距分數cdiffscore(number) 0~100分
 """
 
 def capacityDifference(rCapacity,cCapacity,rmax,rmin,cmax,cmin):
-    dividends=max(rmax-cmin, cmax-cmin)
+    dividends=max(rmax-rmin, cmax-cmin)
     cdiff=abs(rCapacity-cCapacity)   #差距 
     if cdiff==0:
-    	cdiffscore=100
+        	cdiffscore=100
     else:
-    	cdiffscore=100-(cdiff/dividends*100) #算出差距的百分比，距離越大分數越低
+        	cdiffscore=100-(cdiff/dividends*100) #算出差距的百分比，距離越大分數越低
     return cdiffscore   
+
+schedule
+
+courseDetail = pd.read_csv('data/classroom.csv')[['classroom', 'cr_capacity']]
+
+#生成45個session對應的教室
+RoomCapacityList = list(courseDetail.cr_capacity)
+RoomCapacityList = RoomCapacityList * ( weekdays * dailyParts)
+
+WeekdayList = pd.DataFrame({ 'classroom': RoomList})
+WeekdayList
 
 # In[] 
 #4 課程數量：下午>早上>晚上
