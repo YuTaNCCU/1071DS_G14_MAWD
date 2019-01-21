@@ -199,6 +199,6 @@ courseArrangement(schedule, k)
 
 # In[]
 # Objective Function
-def oj(schedule,courseDetail, roomNum, k):
+def oj(schedule,courseDetail, roomNum, k, RoomDetail):
 	weight=[50, 25, 15, 5]
-	value=weight[0]*dailyConcentration(schedule, courseDetail)+weight[1]*sessionDispersion(schedule, roomNum)+weight[2]*capacityDifference(schedule)+weight[3]*courseArrangement(schedule, k)
+	value=weight[0]*dailyConcentration(schedule, courseDetail)+weight[1]*sessionDispersion(schedule, roomNum)+weight[2]*capacityDifference(schedule, RoomDetail)+weight[3]*courseArrangement(schedule, k)
