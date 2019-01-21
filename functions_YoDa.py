@@ -91,12 +91,8 @@ roomNum=3 代表可填入0~3，最多45(session)
 (1)課程總數小於period數:
 	填不滿
 	有09堂課(totalCourseNum)要填入會有幾個3(最大可填入的值=roomNum)? A: 3=9/3(totalCourseNum/roomNum) 
-	有10堂課(totalCourseNum)要填入會有幾個3(最大可填入的值=roomNum)? A: 3=10/3(totalCourseNum/roomNum) 餘1
-	有11堂課(totalCourseNum)要填入會有幾個3(最大可填入的值=roomNum)? A: 3=11/3(totalCourseNum/roomNum) 餘2
 (2)課程總數大於period數 & 不超過session總數：
 	有30堂課(totalCourseNum)要填入會有幾個3(最大可填入的值=roomNum)? A: 10=30/3(totalCourseNum/roomNum)
-	有31堂課(totalCourseNum)要填入會有幾個3(最大可填入的值=roomNum)? A: 10=31/3(totalCourseNum/roomNum) 餘1
-	有32堂課(totalCourseNum)要填入會有幾個3(最大可填入的值=roomNum)? A: 10=32/3(totalCourseNum/roomNum) 餘2
 (3)超過session總數：
 	爆掉了，會有課程填不進去，不符合我們嚴格限制，故不考慮
 #fulfilledmin
@@ -120,7 +116,7 @@ roomNum=3 代表可填入0~3，最多45(session)
 	dividends=maxdiv-mindiv
 	sdisp=(squaresum-mindiv)/dividends*100 #量化為0~100分
 	sdisp
-	
+
 # In[] 
 #3 教室與人數有剛好match    
 """
@@ -152,7 +148,7 @@ def capacityDifference(schedule):
     rmin = schedule_Detail_3.rCapacity.min()
     cmax = schedule_Detail_3.cCapacity.max()
     cmin = schedule_Detail_3.cCapacity.min()
-    dividends=max(rmax-cmin, cmax-rmin)
+    dividends=max(abs(rmax-cmin), abs(cmax-rmin))
     
     #計算每個course 的分數
     cdiff=abs(schedule_Detail_3.rCapacity-schedule_Detail_3.cCapacity)   #差距 
