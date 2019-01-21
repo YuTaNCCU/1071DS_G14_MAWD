@@ -19,32 +19,56 @@ for i in range(session):
     schedule.append('')
 # In[] 
 #1 教授單日授課集中度(例如：老師一天從早上直接上課到晚上)
+
+
+import pandas as pd
+import numpy as np
+#讀取courseDetail
+courseDetail = pd.read_csv('data/course.csv')[['course code', 'Number of students', 'instructor']]
+courseDetail['course code']=courseDetail['course code'].astype(str)
 """
 Input: schedule(list), 含授課教師課程細節的courseDetail(dictionary)
 
-Output: dailyConc(number) 0~100分
+Output: dailyConc(number) 0~100分 : (number of sessions - number of days + 1)/ number of sessions
 """
 def dailyConcentration(schedule, courseDetail):
-	tschedule=[] #儲存老師名字的課表
-	tname={} #儲存有授課的老師名字列表(不重複set)
+    #LEFT JOIN (schedule 與 courseDetail)
+    schedule_Detail =  pd.DataFrame(schedule.copy(),  columns=['course code'])
+    schedule_Detail['course code']=schedule_ValueInstructor['course code'].astype(str)
+    schedule_Detail = pd.merge(schedule_Detail, courseDetail, how='left', on='course code')
 
-	for x in schedule:
-		if x!='':	#有課
-			tschedule.append(courseDetail[x])
-			tname.add(courseDetail[x])
-		else:		#沒課
-			tschedule.append('')
-	#########################卡住了...需思考如何使用k設計條件單日授課量###########################
-	for y in tname: #在課表中搜尋所有老師的名字
-		for z in schedule:
-			if courseDetail[z]==y: #這堂課是這個老師授課的
-				courseNum=courseNum+1
-		    while "條件": #每三個加總一次，存到list中，courseNum歸零
-		    	periodlist.append(courseNum)
-		    	courseNum=0
-		    	pass
-    dailyConc
+    #生成45個session對應的Weekday
+    WeekdayList=[]
+    for i in range(session):
+        print(i,':')
+        if i%15 in [0,1,2]:
+            WeekdayList.append(1)
+        elif i%15 in [3,4,5]:
+            WeekdayList.append(2)
+        elif i%15 in [6,7,8]:
+            WeekdayList.append(3)
+        elif i%15 in [9,10,11]:
+            WeekdayList.append(4)
+        elif i%15 in [12,13,14]:
+            WeekdayList.append(5)
+    WeekdayList = pd.DataFrame({ 'weekday': WeekdayList})
+    
+    #schedule右邊新增一欄Weekday
+    schedule_Detail = pd.concat([schedule_Detail, WeekdayList], axis=1)
+    
+    #計算各個老師的一週上課堂數、上課天數
+    instructorReport = schedule_Detail.groupby('instructor').agg({"course code":'count', "weekday": pd.Series.nunique}).copy()
+    instructorReport['instructor'] = instructorReport.index
+    instructorReport.reset_index(level=0,drop=True, inplace=True)
+    instructorReport.columns = ['NumberofSessions', 'NmberofDays', 'instructor']
+    instructorReport
+    
+    #計算各個老師的分數：(number of sessions - number of days + 1)/ number of sessions
+    instructorScore = (instructorReport.NumberofSessions - instructorReport.NmberofDays  + 1)/ instructorReport.NumberofSessions
+    print(instructorScore)
+    return instructorScore.mean()
 
+dailyConcentration(schedule, courseDetail)
 # In[] 
 #2 每段時間的課程離散度(取各Period課程數的平方和計算)
 """
@@ -111,9 +135,7 @@ def courseArrangement(schedule, k):
 	print(periodSum)  #course number list [morning, afternoon, eveneing]
 	return periodSum[1]/(sum(periodSum))  #下午period數除以全部period數，越大越好
 
-schedule=['306000001','','','','','','','','','','','','','','',
- '','307857001','','','','','','','','','356395001','','','','306737001',
-'307932001','','356822001','','','','','','','','','','','','']
+
 
 # In[] 執行函數
 #3
@@ -125,5 +147,8 @@ cmax=40
 cmin=25
 capacityDifference(rCapacity,cCapacity,rmax,rmin,cmax,cmin)#
 #4
+schedule=['306000001','','','','','','','','','','','','','','',
+ '','307857001','','','','','','','','','356395001','','','','306737001',
+'307932001','','356822001','','','','','','','','','','','','']
 courseArrangement(schedule, k)
 
