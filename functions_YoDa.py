@@ -94,32 +94,41 @@ def sessionDispersion(schedule, roomNum):
 #3 教室與人數有剛好match    
 """
 Input: 
-教室人限rCapacity(number), 課程人限cCapacity(number)
-教室人限最大值rmax(number), 最小值rmin(number)
-課程人限最大值cmax(number), 最小值cmin(number)
+一維度課表schedule(list), 計算索引的參數k(number)
 Output: 人限差距分數cdiffscore(number) 0~100分
 """
-
-def capacityDifference(rCapacity,cCapacity,rmax,rmin,cmax,cmin):
-    dividends=max(rmax-rmin, cmax-cmin)
-    cdiff=abs(rCapacity-cCapacity)   #差距 
-    if cdiff==0:
-        	cdiffscore=100
-    else:
-        	cdiffscore=100-(cdiff/dividends*100) #算出差距的百分比，距離越大分數越低
-    return cdiffscore   
-
-schedule
-
-courseDetail = pd.read_csv('data/classroom.csv')[['classroom', 'cr_capacity']]
-
-#生成45個session對應的教室
-RoomCapacityList = list(courseDetail.cr_capacity)
-RoomCapacityList = RoomCapacityList * ( weekdays * dailyParts)
-
-WeekdayList = pd.DataFrame({ 'classroom': RoomList})
-WeekdayList
-
+def capacityDifference(schedule): 
+    #生成45個session對應的教室
+    RoomDetail = pd.read_csv('data/classroom.csv')[['classroom', 'cr_capacity']]
+    RoomCapacityList = list(RoomDetail.cr_capacity)  #[60, 70, 80]
+    RoomCapacityList = RoomCapacityList * ( weekdays * dailyParts) #[60, 70, 80, 60, 70, 80, 60, 70, 80, 60, 70, 80, 60, 70, 80, 60, 70, 80, 60, 70, 80, 60, 70, 80, 60, 70, 80, 60, 70, 80, 60, 70, 80, 60, 70, 80, 60, 70, 80, 60, 70, 80, 60, 70, 80]
+    RoomCapacityList = pd.DataFrame({ 'RoomCapacity': RoomCapacityList})
+    RoomCapacityList
+    
+    #schedule右邊新增一欄RoomCapacityList
+    schedule_Detail_3 = pd.DataFrame({ 'course code': schedule})
+    schedule_Detail_3 = pd.concat([schedule_Detail_3, RoomCapacityList], axis=1)
+    
+    #LEFT JOIN (schedule 與 CourseCapacityList)
+    schedule_Detail_3['course code']=schedule_Detail_3['course code'].astype(str)
+    courseDetail['course code']=courseDetail['course code'].astype(str)
+    schedule_Detail_3 = pd.merge(schedule_Detail_3, courseDetail[['course code', 'Number of students']], how='left', on='course code')
+    schedule_Detail_3.columns=['course code',   'rCapacity',  'cCapacity']
+    schedule_Detail_3
+    
+    #計算rmax,rmin,cmax,cmin
+    rmax = schedule_Detail_3.rCapacity.max()
+    rmin = schedule_Detail_3.rCapacity.min()
+    cmax = schedule_Detail_3.cCapacity.max()
+    cmin = schedule_Detail_3.cCapacity.min()
+    dividends=max(rmax-cmin, cmax-rmin)
+    
+    #計算每個course 的分數
+    cdiff=abs(schedule_Detail_3.rCapacity-schedule_Detail_3.cCapacity)   #差距 
+    cdiffscore=100-(cdiff/dividends*100) #算出差距的百分比，距離越大分數越低
+    
+    return cdiffscore.mean()
+capacityDifference(schedule)
 # In[] 
 #4 課程數量：下午>早上>晚上
 """
