@@ -83,6 +83,7 @@ Input:
 課程人限最大值cmax(number), 最小值cmin(number)
 Output: 人限差距分數cdiffscore(number) 0~100分
 """
+
 def capacityDifference(rCapacity,cCapacity,rmax,rmin,cmax,cmin):
     dividends=max(rmax-cmin, cmax-cmin)
     cdiff=abs(rCapacity-cCapacity)   #差距 
