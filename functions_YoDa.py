@@ -91,38 +91,18 @@ def sessionDispersion(schedule, roomNum, totalCourseNum):
             courseNum=0
             pass"""
     squaresum=sum(i*i for i in periodlist) #平方和
-"""
-period=15
-roomNum=3 代表可填入0~3，最多45(session)
-#fulfilledmax
-(1)課程總數小於period數:
-	填不滿
-	有09堂課(totalCourseNum)要填入會有幾個3(最大可填入的值=roomNum)? A: 3=9/3(totalCourseNum/roomNum) 
-(2)課程總數大於period數 & 不超過session總數：
-	有30堂課(totalCourseNum)要填入會有幾個3(最大可填入的值=roomNum)? A: 10=30/3(totalCourseNum/roomNum)
-(3)超過session總數：
-	爆掉了，會有課程填不進去，不符合我們嚴格限制，故不考慮
-#fulfilledmin
-計算最分散最小的情況
-(1)課程數小於period數:
-	都填入1
-	有11堂課(totalCourseNum)要填入會有幾個1(最小可填入的值=1)? A: =11totalCourseNum
-(2)課程總數大於period數 & 不超過session總數
-	(總課程數/區塊)^2*區塊	
-	有30堂課(totalCourseNum)要填入會有幾個2(最分散)?			A: =15
-"""	
     if totalCourseNum<period:
         fulfilledmax=totalCourseNum/roomNum
         mindiv=1
-	elif totalCourseNum>=session:
-		fulfilledmax=session/roomNum
-		mindiv=totalCourseNum/period 
-	else:
-		mindiv=totalCourseNum/period 
-
-	dividends=maxdiv-mindiv
-	sdisp=(squaresum-mindiv)/dividends*100 #量化為0~100分
-	return sdisp
+    elif totalCourseNum>=session:
+        fulfilledmax=session/roomNum
+        mindiv=totalCourseNum/period
+    else:
+        mindiv=totalCourseNum/period
+        
+    dividends=maxdiv-mindiv
+    sdisp=(squaresum-mindiv)/dividends*100 #量化為0~100分
+    return sdisp
 
 # In[] 
 #3 教室與人數有剛好match    
