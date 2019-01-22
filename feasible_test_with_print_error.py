@@ -30,7 +30,7 @@ def feasible_test(test_schedule):
         elif data in test_schedule: #課程皆可在原始資料中被找到
             pass
         else:
-            # print("Error: 所有的課程應該都被排下去")
+            print("Error: 所有的課程應該都被排下去")
             return False
 
     # 2.不可以有重複課程
@@ -40,7 +40,7 @@ def feasible_test(test_schedule):
         elif test_schedule.count(data) == 1: #課程只有一個
             pass
         else:
-            # print("Error: 不可以有重複課程")
+            print("Error: 不可以有重複課程")
             return False
         
     # 3.老師同一個時間不能出現在兩間教室(同一時段無重複教授)
@@ -52,7 +52,7 @@ def feasible_test(test_schedule):
             course_name_index1 = course_name.index(test_schedule[i])
             course_name_index2 = course_name.index(test_schedule[i+1])
             if professor_name[course_name_index1] == professor_name[course_name_index2]:
-                # print("Error: 老師同一個時間不能出現在兩間教室(同一時段無重複教授)")
+                print("Error: 老師同一個時間不能出現在兩間教室(同一時段無重複教授)")
                 return False
         
         if test_schedule[i+1] == "" or test_schedule[i+2] == "":
@@ -61,7 +61,7 @@ def feasible_test(test_schedule):
             course_name_index2 = course_name.index(test_schedule[i+1])
             course_name_index3 = course_name.index(test_schedule[i+2])
             if professor_name[course_name_index2] == professor_name[course_name_index3]:
-                # print("Error: 老師同一個時間不能出現在兩間教室(同一時段無重複教授)")
+                print("Error: 老師同一個時間不能出現在兩間教室(同一時段無重複教授)")
                 return False
         
         if test_schedule[i] == "" or test_schedule[i+2] == "":
@@ -70,7 +70,7 @@ def feasible_test(test_schedule):
             course_name_index1 = course_name.index(test_schedule[i])
             course_name_index3 = course_name.index(test_schedule[i+2])
             if professor_name[course_name_index1] == professor_name[course_name_index3]:
-                # print("Error: 老師同一個時間不能出現在兩間教室(同一時段無重複教授)")
+                print("Error: 老師同一個時間不能出現在兩間教室(同一時段無重複教授)")
                 return False
  
 
@@ -83,7 +83,7 @@ def feasible_test(test_schedule):
             course_name_index1 = course_name.index(test_schedule[i])
             course_name_index2 = course_name.index(test_schedule[i+1])
             if classroom[course_name_index1] == classroom[course_name_index2]:
-                # print("Error: 教室不可重複使用")
+                print("Error: 教室不可重複使用")
                 return False
         
         if test_schedule[i+1] == "" or test_schedule[i+2] == "":
@@ -92,7 +92,7 @@ def feasible_test(test_schedule):
             course_name_index2 = course_name.index(test_schedule[i+1])
             course_name_index3 = course_name.index(test_schedule[i+2])
             if classroom[course_name_index2] == classroom[course_name_index3]:
-                # print("Error: 教室不可重複使用")
+                print("Error: 教室不可重複使用")
                 return False
         
         if test_schedule[i] == "" or test_schedule[i+2] == "":
@@ -101,7 +101,7 @@ def feasible_test(test_schedule):
             course_name_index1 = course_name.index(test_schedule[i])
             course_name_index3 = course_name.index(test_schedule[i+2])
             if classroom[course_name_index1] == classroom[course_name_index3]:
-                # print("Error: 教室不可重複使用")
+                print("Error: 教室不可重複使用")
                 return False
 
     return True
