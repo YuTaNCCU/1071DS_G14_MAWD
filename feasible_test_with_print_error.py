@@ -75,7 +75,6 @@ def feasible_test(test_schedule):
                 print("發現衝突:({},{}), 位於時間({},{})".format(test_schedule[i],test_schedule[i+2],i,i+2))
                 print("Error: 老師同一個時間不能出現在兩間教室(同一時段無重複教授)")
                 return False
- 
 
 #     # 4.教室不可重複使用
 #     # (0 1 2),(3 4 5),(6 7 8)
