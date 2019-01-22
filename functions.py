@@ -114,6 +114,7 @@ roomNum=3 代表可填入0~3，最多45(session)
 	else:
 		mindiv=totalCourseNum/period 
 
+	maxdiv=roomNum*roomNum*(fulfilledmax) 
 	dividends=maxdiv-mindiv
 	sdisp=(squaresum-mindiv)/dividends*100 #量化為0~100分
 	return sdisp
