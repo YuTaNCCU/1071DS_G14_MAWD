@@ -174,16 +174,9 @@ schedule=['306000001','','','','','','','','','','','','','','',
 # In[]
 # Objective Function
 
-#暫時剔除#2
-def ObjFun(schedule,courseDetail, roomNum, k, RoomDetail):
-    weight=[50, 25, 15, 5]
-    value=weight[0]*dailyConcentration(schedule, courseDetail)+weight[2]*capacityDifference(schedule, RoomDetail)+weight[3]*courseArrangement(schedule, k)
-    return value
-ObjFun(schedule,courseDetail, roomNum, k, RoomDetail)
-
 
 def ObjFun(schedule,courseDetail, roomNum, k, RoomDetail, session, period, totalCourseNum):
-    weight=[50, 25, 15, 5]
+    weight=[0.5, 0.25, 0.15, 0.05]
     Objval=weight[0]*dailyConcentration(schedule, courseDetail)+\
     weight[1]*sessionDispersion(schedule, roomNum, session, period, totalCourseNum)+\
     weight[2]*capacityDifference(schedule, RoomDetail)+\
