@@ -83,13 +83,9 @@ def sessionDispersion(schedule, roomNum, totalCourseNum):
     for i, x in enumerate(schedule):
         if x != '': #有課
             courseNum=courseNum+1
-        #######################
-        # 下面while似乎是無窮   ＃
-        ######################
-        while i%roomNum==roomNum-1: #每三個加總一次，存到list中，courseNum歸零
+        if i%roomNum==roomNum-1: #每三個加總一次，存到list中，courseNum歸零
             periodlist.append(courseNum)
             courseNum=0
-            pass
     squaresum=sum(i*i for i in periodlist) #平方和
     if totalCourseNum<period:
         fulfilledmax=totalCourseNum/roomNum
