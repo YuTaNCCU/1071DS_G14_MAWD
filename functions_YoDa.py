@@ -87,7 +87,7 @@ def sessionDispersion(schedule, roomNum, totalCourseNum):
             periodlist.append(courseNum)
             courseNum=0
             pass
-   squaresum=sum(i*i for i in periodlist) #平方和
+    squaresum=sum(i*i for i in periodlist) #平方和
 """
 period=15
 roomNum=3 代表可填入0~3，最多45(session)
@@ -111,7 +111,7 @@ roomNum=3 代表可填入0~3，最多45(session)
     if totalCourseNum<period:
         fulfilledmax=totalCourseNum/roomNum
         mindiv=1
-	else if totalCourseNum>=session:
+	elif totalCourseNum>=session:
 		fulfilledmax=session/roomNum
 		mindiv=totalCourseNum/period 
 	else:
@@ -184,21 +184,6 @@ def courseArrangement(schedule, k):
 schedule=['306000001','','','','','','','','','','','','','','',
  '','307857001','','','','','','','','','356395001','','','','306737001',
 '307932001','','356822001','','','','','','','','','','','','']
-# In[] 執行函數
-
-#3
-rCapacity=40
-cCapacity=60
-rmax=80
-rmin=60
-cmax=40
-cmin=25
-capacityDifference(rCapacity,cCapacity,rmax,rmin,cmax,cmin)#
-#4
-schedule=['306000001','','','','','','','','','','','','','','',
- '','307857001','','','','','','','','','356395001','','','','306737001',
-'307932001','','356822001','','','','','','','','','','','','']
-courseArrangement(schedule, k)
 
 # In[]
 # Objective Function
