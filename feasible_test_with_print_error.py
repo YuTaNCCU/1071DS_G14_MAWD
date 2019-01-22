@@ -52,6 +52,7 @@ def feasible_test(test_schedule):
             course_name_index1 = course_name.index(test_schedule[i])
             course_name_index2 = course_name.index(test_schedule[i+1])
             if professor_name[course_name_index1] == professor_name[course_name_index2]:
+                print("發現衝突:({},{}), 位於時間({},{})".format(test_schedule[i],test_schedule[i+1],i,i+1))
                 print("Error: 老師同一個時間不能出現在兩間教室(同一時段無重複教授)")
                 return False
         
@@ -61,6 +62,7 @@ def feasible_test(test_schedule):
             course_name_index2 = course_name.index(test_schedule[i+1])
             course_name_index3 = course_name.index(test_schedule[i+2])
             if professor_name[course_name_index2] == professor_name[course_name_index3]:
+                print("發現衝突:({},{}), 位於時間({},{})".format(test_schedule[i+1],test_schedule[i+2],i+1,i+2))
                 print("Error: 老師同一個時間不能出現在兩間教室(同一時段無重複教授)")
                 return False
         
@@ -70,6 +72,7 @@ def feasible_test(test_schedule):
             course_name_index1 = course_name.index(test_schedule[i])
             course_name_index3 = course_name.index(test_schedule[i+2])
             if professor_name[course_name_index1] == professor_name[course_name_index3]:
+                print("發現衝突:({},{}), 位於時間({},{})".format(test_schedule[i],test_schedule[i+2],i,i+2))
                 print("Error: 老師同一個時間不能出現在兩間教室(同一時段無重複教授)")
                 return False
  
@@ -83,6 +86,7 @@ def feasible_test(test_schedule):
             course_name_index1 = course_name.index(test_schedule[i])
             course_name_index2 = course_name.index(test_schedule[i+1])
             if classroom[course_name_index1] == classroom[course_name_index2]:
+                print("發現衝突:({},{}), 位於時間({},{})".format(test_schedule[i],test_schedule[i+1],i,i+1))
                 print("Error: 教室不可重複使用")
                 return False
         
@@ -92,6 +96,7 @@ def feasible_test(test_schedule):
             course_name_index2 = course_name.index(test_schedule[i+1])
             course_name_index3 = course_name.index(test_schedule[i+2])
             if classroom[course_name_index2] == classroom[course_name_index3]:
+                print("發現衝突:({},{}), 位於時間({},{})".format(test_schedule[i+1],test_schedule[i+2],i+1,i+2))
                 print("Error: 教室不可重複使用")
                 return False
         
@@ -101,6 +106,7 @@ def feasible_test(test_schedule):
             course_name_index1 = course_name.index(test_schedule[i])
             course_name_index3 = course_name.index(test_schedule[i+2])
             if classroom[course_name_index1] == classroom[course_name_index3]:
+                print("發現衝突:({},{}), 位於時間({},{})".format(test_schedule[i],test_schedule[i+2],i,i+2))
                 print("Error: 教室不可重複使用")
                 return False
 
