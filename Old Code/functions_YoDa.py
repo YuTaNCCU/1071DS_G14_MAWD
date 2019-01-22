@@ -5,10 +5,7 @@ import numpy as np
 courseDetail = pd.read_csv('data/course.csv')[['course code', 'Number of students', 'instructor']]
 courseDetail['course code']=courseDetail['course code'].astype(str)
 RoomDetail = pd.read_csv('data/classroom.csv')[['classroom', 'cr_capacity']]
-#initial schedule 預設為空直
-schedule=[]
-for i in range(session):
-    schedule.append('')
+
 #variables
 roomNum=3 #教室數量
 weekdays=5 #上課日子
@@ -17,6 +14,12 @@ period=weekdays*dailyParts #15 一個weekdays中，不分教室的區塊總數
 session=roomNum*weekdays*dailyParts #45 一個weekdays中，空教室的總數(一維陣列的長度)
 k=weekdays*roomNum #15 [早上、下午、晚上] 一個part中的session數(索引調整參數)
 totalCourseNum=30
+
+#initial schedule 預設為空直
+schedule=[]
+for i in range(session):
+    schedule.append('')
+    
 # testing data
 """
 schedule=['306000001','','306008001','','','306016002','356425001','','306016012','307873001','','307867001','307942001','','307870001',
@@ -74,49 +77,35 @@ dailyConcentration(schedule, courseDetail)
 Input: 課表schedule(list), 教室數量roomNum(number)
 Output: 課程離散度sdisp(number) 0~100分
 """
-def sessionDispersion(schedule, roomNum, totalCourseNum):
-	courseNum=0
-	periodlist=[] #每個中period的課程數量
-	for i, x in enumerate(schedule):
-		if x != '' #有課
-			courseNum=courseNum+1
-		while i%roomNum==roomNum-1: #每三個加總一次，存到list中，courseNum歸零
-			periodlist.append(courseNum)
-			courseNum=0
-			pass
-	squaresum=sum(i*i for i in periodlist) #平方和
-"""
-period=15
-roomNum=3 代表可填入0~3，最多45(session)
-#fulfilledmax
-(1)課程總數小於period數:
-	填不滿
-	有09堂課(totalCourseNum)要填入會有幾個3(最大可填入的值=roomNum)? A: 3=9/3(totalCourseNum/roomNum) 
-(2)課程總數大於period數 & 不超過session總數：
-	有30堂課(totalCourseNum)要填入會有幾個3(最大可填入的值=roomNum)? A: 10=30/3(totalCourseNum/roomNum)
-(3)超過session總數：
-	爆掉了，會有課程填不進去，不符合我們嚴格限制，故不考慮
-#fulfilledmin
-計算最分散最小的情況
-(1)課程數小於period數:
-	都填入1
-	有11堂課(totalCourseNum)要填入會有幾個1(最小可填入的值=1)? A: =11totalCourseNum
-(2)課程總數大於period數 & 不超過session總數
-	(總課程數/區塊)^2*區塊	
-	有30堂課(totalCourseNum)要填入會有幾個2(最分散)?			A: =15
-"""	
-	if totalCourseNum<period:
-		fulfilledmax=totalCourseNum/roomNum
-		mindiv=1
-	else if totalCourseNum>=session:
-		fulfilledmax=session/roomNum
-		mindiv=totalCourseNum/period 
-	else:
-		mindiv=totalCourseNum/period 
+def sessionDispersion(schedule, roomNum, session, period, totalCourseNum):
+    courseNum=0
+    fulfilledmax=session/roomNum
+    periodlist=[] #每個中period的課程數量
+    for i, x in enumerate(schedule):
+        if x != '': #有課
+            courseNum=courseNum+1
+        if i%roomNum==roomNum-1: #每三個加總一次，存到list中，courseNum歸零
+            periodlist.append(courseNum)
+            courseNum=0
+    squaresum=sum(i*i for i in periodlist) #平方和
+    
+    if totalCourseNum<period:
+        fulfilledmax=totalCourseNum/roomNum
+        mindiv=1
+    elif totalCourseNum>=session:
+        fulfilledmax=session/roomNum
+        mindiv=totalCourseNum/period
+    else:
+        mindiv=totalCourseNum/period
 
-	dividends=maxdiv-mindiv
-	sdisp=(squaresum-mindiv)/dividends*100 #量化為0~100分
-	sdisp
+    maxdiv=roomNum*roomNum*(fulfilledmax) 
+    dividends=maxdiv-mindiv
+    #print(dividends, maxdiv, mindiv, squaresum)
+    sdisp=(squaresum-mindiv)/dividends*100 #量化為0~100分
+
+    return sdisp
+
+
 
 # In[] 
 #3 教室與人數有剛好match    
@@ -155,7 +144,7 @@ def capacityDifference(schedule, RoomDetail):
     cdiffscore=100-(cdiff/dividends*100) #算出差距的百分比，距離越大分數越低
     
     return cdiffscore.mean()
-capacityDifference(schedule)
+capacityDifference(schedule, RoomDetail)
 # In[] 
 #4 課程數量：下午>早上>晚上
 """
@@ -181,24 +170,37 @@ def courseArrangement(schedule, k):
 schedule=['306000001','','','','','','','','','','','','','','',
  '','307857001','','','','','','','','','356395001','','','','306737001',
 '307932001','','356822001','','','','','','','','','','','','']
-# In[] 執行函數
-
-#3
-rCapacity=40
-cCapacity=60
-rmax=80
-rmin=60
-cmax=40
-cmin=25
-capacityDifference(rCapacity,cCapacity,rmax,rmin,cmax,cmin)#
-#4
-schedule=['306000001','','','','','','','','','','','','','','',
- '','307857001','','','','','','','','','356395001','','','','306737001',
-'307932001','','356822001','','','','','','','','','','','','']
-courseArrangement(schedule, k)
 
 # In[]
 # Objective Function
-def oj(schedule,courseDetail, roomNum, k, RoomDetail):
-	weight=[50, 25, 15, 5]
-	value=weight[0]*dailyConcentration(schedule, courseDetail)+weight[1]*sessionDispersion(schedule, roomNum)+weight[2]*capacityDifference(schedule, RoomDetail)+weight[3]*courseArrangement(schedule, k)
+
+#暫時剔除#2
+def ObjFun(schedule,courseDetail, roomNum, k, RoomDetail):
+    weight=[50, 25, 15, 5]
+    value=weight[0]*dailyConcentration(schedule, courseDetail)+weight[2]*capacityDifference(schedule, RoomDetail)+weight[3]*courseArrangement(schedule, k)
+    return value
+ObjFun(schedule,courseDetail, roomNum, k, RoomDetail)
+
+
+def ObjFun(schedule,courseDetail, roomNum, k, RoomDetail, session, period, totalCourseNum):
+    weight=[50, 25, 15, 5]
+    Objval=weight[0]*dailyConcentration(schedule, courseDetail)+\
+    weight[1]*sessionDispersion(schedule, roomNum, session, period, totalCourseNum)+\
+    weight[2]*capacityDifference(schedule, RoomDetail)+\
+    weight[3]*courseArrangement(schedule, k)
+    return Objval
+
+ObjFun(schedule,courseDetail, roomNum, k, RoomDetail, session, period, totalCourseNum)
+
+
+
+
+
+
+
+
+
+
+
+
+
