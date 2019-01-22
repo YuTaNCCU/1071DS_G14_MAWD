@@ -1,25 +1,22 @@
-temp_schedule = ['306000001','','306008001','','','306016002','356425001','','306016012','307873001','','307867001','307942001','','307870001',
- '306016022','307857001','306050011','356387001','356388001','307851001','306525001','','307035001','306736001','356395001','307034001','356461001','','306737001',
-'307932001','','356822001','','356389001','356019001','356564001','','307901001','356813001','','356808001','','','']
+import csv
+dataset = []
+course_name = []
+classroom = []
+professor_name = []
 
-schedule_feasible = ['306000001','','306008001','','','306016002','356425001','','306016012','307873001','','307867001','307942001','','307870001',
- '306016022','307857001','306050011','356387001','356388001','307851001','306525001','','307035001','306736001','356395001','307034001','356461001','','306737001',
-'307932001','','356822001','','356389001','356019001','356564001','','307901001','356813001','','356808001','','','']
-
-schedule_feasible2 = ['','','306008001','306016002','306000001','','356425001','','306016012','307873001','','307867001','307942001','','307870001',
- '306016022','307857001','306050011','356387001','356388001','307851001','306525001','','307035001','306736001','356395001','307034001','356461001','','306737001',
-'307932001','','356822001','','356389001','356019001','356564001','','307901001','356813001','','356808001','','','']
-
-schedule_miss_class = ['','','306008001','','','306016002','356425001','','306016012','307873001','','307867001','307942001','','307870001',
- '306016022','307857001','306050011','356387001','356388001','307851001','306525001','','307035001','306736001','356395001','307034001','356461001','','306737001',
-'307932001','','356822001','','356389001','356019001','356564001','','307901001','356813001','','356808001','','','']
-
-schedule_multiple_class = ['306000001','306000001','306008001','','','306016002','356425001','','306016012','307873001','','307867001','307942001','','307870001',
- '306016022','307857001','306050011','356387001','356388001','307851001','306525001','','307035001','306736001','356395001','307034001','356461001','','306737001',
-'307932001','','356822001','','356389001','356019001','356564001','','307901001','356813001','','356808001','','','']
+with open("course.csv","r",encoding="utf-8") as fIn:
+    csvIn = csv.reader(fIn)
+    for line in csvIn:
+        dataset.append(line)
+        course_name.append(line[0])
+        classroom.append(line[2]) 
+        professor_name.append(line[3]) 
+        
+course_name = course_name[1:]
+classroom = classroom[1:]
+professor_name = professor_name[1:]
 
 def feasible_test(test_schedule):
-    global temp_schedule
     '''
     1.所有的課程應該都被排下去
     2.老師同一個時間不能出現在兩間教室
@@ -27,32 +24,86 @@ def feasible_test(test_schedule):
     '''
 
     # 1.所有的課程應該都被排下去
-    for data in temp_schedule:
+    for data in course_name:
         if data == "":
             pass
         elif data in test_schedule: #課程皆可在原始資料中被找到
             pass
         else:
-            print("Error:所有的課程應該都被排下去")
+            print("Error: 所有的課程應該都被排下去")
             return False
 
-    # 2.老師同一個時間不能出現在兩間教室(無重複)
+    # 2.不可以有重複課程
     for data in test_schedule:
         if data == "":
             pass
         elif test_schedule.count(data) == 1: #課程只有一個
             pass
         else:
-            print("Error:老師同一個時間不能出現在兩間教室(無重複)")
+            print("Error: 不可以有重複課程")
             return False
+        
+    # 3.老師同一個時間不能出現在兩間教室(同一時段無重複教授)
+    # (0 1 2),(3 4 5),(6 7 8)
+    for i in range(0,45,3):
+        if test_schedule[i] == "" or test_schedule[i+1] == "":
+            pass
+        else:
+            course_name_index1 = course_name.index(test_schedule[i])
+            course_name_index2 = course_name.index(test_schedule[i+1])
+            if professor_name[course_name_index1] == professor_name[course_name_index2]:
+                print("Error: 老師同一個時間不能出現在兩間教室(同一時段無重複教授)")
+                return False
+        
+        if test_schedule[i+1] == "" or test_schedule[i+2] == "":
+            pass
+        else:
+            course_name_index2 = course_name.index(test_schedule[i+1])
+            course_name_index3 = course_name.index(test_schedule[i+2])
+            if professor_name[course_name_index2] == professor_name[course_name_index3]:
+                print("Error: 老師同一個時間不能出現在兩間教室(同一時段無重複教授)")
+                return False
+        
+        if test_schedule[i] == "" or test_schedule[i+2] == "":
+            pass
+        else:
+            course_name_index1 = course_name.index(test_schedule[i])
+            course_name_index3 = course_name.index(test_schedule[i+2])
+            if professor_name[course_name_index1] == professor_name[course_name_index3]:
+                print("Error: 老師同一個時間不能出現在兩間教室(同一時段無重複教授)")
+                return False
+ 
 
-    # 3.教室不可重複使用
-    pass
+    # 4.教室不可重複使用
+    # (0 1 2),(3 4 5),(6 7 8)
+    for i in range(0,45,3):
+        if test_schedule[i] == "" or test_schedule[i+1] == "":
+            pass
+        else:
+            course_name_index1 = course_name.index(test_schedule[i])
+            course_name_index2 = course_name.index(test_schedule[i+1])
+            if classroom[course_name_index1] == classroom[course_name_index2]:
+                print("Error: 教室不可重複使用")
+                return False
+        
+        if test_schedule[i+1] == "" or test_schedule[i+2] == "":
+            pass
+        else:
+            course_name_index2 = course_name.index(test_schedule[i+1])
+            course_name_index3 = course_name.index(test_schedule[i+2])
+            if classroom[course_name_index2] == classroom[course_name_index3]:
+                print("Error: 教室不可重複使用")
+                return False
+        
+        if test_schedule[i] == "" or test_schedule[i+2] == "":
+            pass
+        else:
+            course_name_index1 = course_name.index(test_schedule[i])
+            course_name_index3 = course_name.index(test_schedule[i+2])
+            if classroom[course_name_index1] == classroom[course_name_index3]:
+                print("Error: 教室不可重複使用")
+                return False
 
     return True
 
 
-#print(feasible_test(schedule_feasible))
-#print(feasible_test(schedule_miss_class))
-#print(feasible_test(schedule_multiple_class))
-#print(feasible_test(schedule_feasible2))
