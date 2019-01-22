@@ -1,13 +1,14 @@
 # In[] 
 import pandas as pd
 import numpy as np
-#讀取courseDetail
+#讀取
 courseDetail = pd.read_csv('data/course.csv')[['course code', 'Number of students', 'instructor']]
-#print(courseDetail)
+teacherDetail= pd.read_csv('data/instructor.csv')[['i_no', 'instructor name']]
 courseDetail['course code']=courseDetail['course code'].astype(str)
-#print(courseDetail)
 RoomDetail = pd.read_csv('data/classroom.csv')[['classroom', 'cr_capacity']]
-#print(RoomDetail)
+
+cNum = len(courseDetail['instructor']) 	#課程總數
+tNum = len(teacherDetail['i_no'])+1		#老師總數
 #variables
 roomNum=3 #教室數量
 weekdays=5 #上課日子
@@ -19,24 +20,52 @@ totalCourseNum=30
 
 #initial empty schedule 預設為空直
 schedule=[]
+
 for i in range(session):
     schedule.append('')
-    
+#生成空的list[list]
+def init_list_of_objects(size):
+    list_of_objects = list()
+    for i in range(0,size):
+        list_of_objects.append( list() ) #different object reference each time
+    return list_of_objects
+
 # testing data
 
 schedule=['306000001','','306008001','','','306016002','356425001','','306016012','307873001','','307867001','307942001','','307870001',
  '306016022','307857001','306050011','356387001','356388001','307851001','306525001','','307035001','306736001','356395001','307034001','356461001','','306737001',
 '307932001','','356822001','','356389001','356019001','356564001','','307901001','356813001','','356808001','','','']
+#print(courseDetail)#course code, Number of students, instructor
+courseDetail=courseDetail.drop(columns="Number of students") 
+#print(courseDetail)#course code, instructor
+courseDetail = courseDetail[['instructor', 'course code']]
+print(courseDetail)
 
-schedule_Detail =  pd.DataFrame(schedule.copy(),  columns=['course code'])
-schedule_Detail['course code']=schedule_Detail['course code'].astype(str)
-schedule_Detail = pd.merge(schedule_Detail, courseDetail, how='left', on='course code')
-print(type(courseDetail['instructor'][0]))
-instructorReport = schedule_Detail.groupby(['instructor']).agg({"course code":'count'}).sort_values(['course code'],ascending=False).copy()
+instructorReport = courseDetail.groupby(['instructor']).agg({"course code":'count'}).sort_values(['course code'],ascending=False).copy()
 instructorReport = instructorReport.reset_index()
-print(instructorReport)
-x=instructorReport.to_dict('records')
-print(x)
+instructorReport['instructor']=instructorReport['instructor'].astype(str)
+#print(instructorReport) #照授課數排的instructor, sum(course)
+#老師排入空課表的優先順序 轉換成list
+y=np.array(instructorReport['instructor'])
+y=y.tolist()
+#teacherNum=len(y)
+#老師排入空課表的優先順序['9', '5', '1', '7', '6', '4', '8', '3', '10']
+
+
+teacher=init_list_of_objects(tNum)    #空的教師列表
+for x in range(cNum):
+	key= courseDetail['instructor'][x]#key
+	value= courseDetail['course code'][x]#value
+	print(key, value)
+	teacher[key].append(value)
+print(teacher) #各教師的授課列表
+
+#轉換成字典
+#x=courseDetail.to_dict('records')
+#print(x['instructor'])
+#[{'instructor': 5, 'course code': '306000001'}, {'instructor': 9, 'course code': '306008001'}, {'instructor': 4, 'course code': '306016002'}, {'instructor': 1, 'course code': '306016012'}, {'instructor': 6, 'course code': '306016022'}, {'instructor': 10, 'course code': '306050011'}, {'instructor': 9, 'course code': '306525001'}, {'instructor': 7, 'course code': '306736001'}, {'instructor': 5, 'course code': '306737001'}, {'instructor': 6, 'course code': '307034001'}, {'instructor': 8, 'course code': '307035001'}, {'instructor': 9, 'course code': '307851001'}, {'instructor': 5, 'course code': '307857001'}, {'instructor': 9, 'course code': '307867001'}, {'instructor': 1, 'course code': '307870001'}, {'instructor': 7, 'course code': '307873001'}, {'instructor': 4, 'course code': '307901001'}, {'instructor': 8, 'course code': '307932001'}, {'instructor': 1, 'course code': '307942001'}, {'instructor': 9, 'course code': '356019001'}, {'instructor': 9, 'course code': '356387001'}, {'instructor': 7, 'course code': '356388001'}, {'instructor': 6, 'course code': '356389001'}, {'instructor': 7, 'course code': '356395001'}, {'instructor': 5, 'course code': '356425001'}, {'instructor': 5, 'course code': '356461001'}, {'instructor': 3, 'course code': '356564001'}, {'instructor': 1, 'course code': '356808001'}, {'instructor': 5, 'course code': '356822001'}, {'instructor': 9, 'course code': '356813001'}]
+
+
 
 """
 1. 創建空的課表
