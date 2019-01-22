@@ -78,30 +78,34 @@ Input: 課表schedule(list), 教室數量roomNum(number)
 Output: 課程離散度sdisp(number) 0~100分
 """
 def sessionDispersion(schedule, roomNum, session, period, totalCourseNum):
-	courseNum=0
-	fulfilledmax=session/roomNum
-	periodlist=[] #每個中period的課程數量
-	for i, x in enumerate(schedule):
-	    if x != '': #有課
-	        courseNum=courseNum+1
-	    if i%roomNum==roomNum-1: #每三個加總一次，存到list中，courseNum歸零
-	        periodlist.append(courseNum)
-	        courseNum=0
-	squaresum=sum(i*i for i in periodlist) #平方和
+    courseNum=0
+    fulfilledmax=session/roomNum
+    periodlist=[] #每個中period的課程數量
+    for i, x in enumerate(schedule):
+        if x != '': #有課
+            courseNum=courseNum+1
+        if i%roomNum==roomNum-1: #每三個加總一次，存到list中，courseNum歸零
+            periodlist.append(courseNum)
+            courseNum=0
+    squaresum=sum(i*i for i in periodlist) #平方和
+    
+    if totalCourseNum<period:
+        fulfilledmax=totalCourseNum/roomNum
+        mindiv=1
+    elif totalCourseNum>=session:
+        fulfilledmax=session/roomNum
+        mindiv=totalCourseNum/period
+    else:
+        mindiv=totalCourseNum/period
 
-	if totalCourseNum<period:
-	    fulfilledmax=totalCourseNum/roomNum
-	    mindiv=1
-	elif totalCourseNum>=session:
-	    fulfilledmax=session/roomNum
-	    mindiv=totalCourseNum/period
-	else:
-	    mindiv=totalCourseNum/period
-	maxdiv=roomNum*roomNum*(fulfilledmax) 
-	dividends=maxdiv-mindiv
-	#print(dividends, maxdiv, mindiv, squaresum)
-	sdisp=(squaresum-mindiv)/dividends*100 #量化為0~100分
+    maxdiv=roomNum*roomNum*(fulfilledmax) 
+    dividends=maxdiv-mindiv
+    #print(dividends, maxdiv, mindiv, squaresum)
+    sdisp=(squaresum-mindiv)/dividends*100 #量化為0~100分
+
     return sdisp
+
+
 
 # In[] 
 #3 教室與人數有剛好match    
@@ -169,18 +173,21 @@ schedule=['306000001','','','','','','','','','','','','','','',
 
 # In[]
 # Objective Function
-def ObjFun(schedule,courseDetail, roomNum, k, RoomDetail, session, period, totalCourseNum):
-	weight=[50, 25, 15, 5]
-	value=weight[0]*dailyConcentration(schedule, courseDetail)+weight[1]*sessionDispersion(schedule, roomNum, session, period, totalCourseNum)+weight[2]*capacityDifference(schedule, RoomDetail)+weight[3]*courseArrangement(schedule, k)
 
 #暫時剔除#2
 def ObjFun(schedule,courseDetail, roomNum, k, RoomDetail):
     weight=[50, 25, 15, 5]
     value=weight[0]*dailyConcentration(schedule, courseDetail)+weight[2]*capacityDifference(schedule, RoomDetail)+weight[3]*courseArrangement(schedule, k)
     return value
-
 ObjFun(schedule,courseDetail, roomNum, k, RoomDetail)
 
+
+def ObjFun(schedule,courseDetail, roomNum, k, RoomDetail, session, period, totalCourseNum):
+	weight=[50, 25, 15, 5]
+	value=weight[0]*dailyConcentration(schedule, courseDetail)+weight[1]*sessionDispersion(schedule, roomNum, session, period, totalCourseNum)+weight[2]*capacityDifference(schedule, RoomDetail)+weight[3]*courseArrangement(schedule, k)
+
+
+ObjFun(schedule,courseDetail, roomNum, k, RoomDetail, session, period, totalCourseNum)
 
 
 
