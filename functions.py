@@ -74,13 +74,16 @@ dailyConcentration(schedule, courseDetail)
 以30堂課來排
 最小15個時段都兩門=15*2^2=60
 最大10個時段有3門=10*3^2=90
-Input: 課表schedule(list), 教室數量roomNum(number)
+Input: 課表schedule(list), 教室數量roomNum(int), 區塊數period(int), 課程總數totalCourseNum(int) 
 Output: 課程離散度sdisp(number) 0~100分
 """
 def sessionDispersion(schedule, roomNum, session, period, totalCourseNum):
     courseNum=0
-    fulfilledmax=session/roomNum
+    maxdiv=100
+    mindiv=0
     periodlist=[] #每個中period的課程數量
+
+    #計算每個區塊中課程數量的平方和
     for i, x in enumerate(schedule):
         if x != '': #有課
             courseNum=courseNum+1
@@ -89,22 +92,19 @@ def sessionDispersion(schedule, roomNum, session, period, totalCourseNum):
             courseNum=0
     squaresum=sum(i*i for i in periodlist) #平方和
     
+    #計算平方和最大值&最小值
     if totalCourseNum<period:
-        fulfilledmax=totalCourseNum/roomNum
-        mindiv=1
-    elif totalCourseNum<=session:
-        fulfilledmax=session/roomNum
-        mindiv=totalCourseNum/period
-    else:
-        mindiv=totalCourseNum/period
+        maxdiv=roomNum*roomNum*(totalCourseNum/roomNum)
+        mindiv=1*1*totalCourseNum
+    else: # totalCourseNum>period
+        maxdiv=roomNum*roomNum*(session/roomNum)
+        mindiv=totalCourseNum*totalCourseNum/period
+        #這邊不考慮totalCourseNum>session的情況，因為這樣違背了條件限制[所有課都要被排入]
 
-    maxdiv=roomNum*roomNum*(fulfilledmax) 
-    dividends=maxdiv-mindiv
-    #print(dividends, maxdiv, mindiv, squaresum)
-    sdisp=(squaresum-mindiv)/dividends*100 #量化為0~100分
+    #將平方和量化為0~100分
+    sdisp=((squaresum-mindiv)/(maxdiv-mindiv))*100 
 
     return sdisp
-
 
 
 # In[] 
