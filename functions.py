@@ -189,6 +189,7 @@ def ObjFun(schedule,courseDetail, roomNum, k, RoomDetail, session, period, total
     weight[1]*sessionDispersion(schedule, roomNum, session, period, totalCourseNum)+\
     weight[2]*capacityDifference(schedule, RoomDetail)+\
     weight[3]*courseArrangement(schedule, k)
+    print(Objval)
     return Objval
 
 #ObjFun(schedule,courseDetail, roomNum, k, RoomDetail, session, period, totalCourseNum)
@@ -211,6 +212,6 @@ def ListToSchedule(schedule):
 #ListToSchedule(schedule_optimized)
 
 # In[]
-result=['306008001', '307942001', '', '306525001', '356808001', '', '307851001', '306736001', '', '307867001', '307873001', '', '356019001', '356388001', '', '356387001', '356395001', '', '356813001', '306016022', '', '306000001', '307034001', '', '306737001', '356389001', '', '307857001', '306016002', '', '356425001', '307901001', '', '356461001', '307035001', '', '356822001', '307932001', '', '306016012', '356564001', '', '307870001', '306050011', '']
-x=ObjFun(schedule,courseDetail, roomNum, k, RoomDetail, session, period, totalCourseNum)
+#result=['306008001', '307942001', '', '306525001', '356808001', '', '307851001', '306736001', '', '307867001', '307873001', '', '356019001', '356388001', '', '356387001', '356395001', '', '356813001', '306016022', '', '306000001', '307034001', '', '306737001', '356389001', '', '307857001', '306016002', '', '356425001', '307901001', '', '356461001', '307035001', '', '356822001', '307932001', '', '306016012', '356564001', '', '307870001', '306050011', '']
+#x=ObjFun(schedule,courseDetail, roomNum, k, RoomDetail, session, period, totalCourseNum)
 #print(x)
