@@ -184,3 +184,20 @@ def ObjFun(schedule,courseDetail, roomNum, k, RoomDetail, session, period, total
     return Objval
 
 ObjFun(schedule,courseDetail, roomNum, k, RoomDetail, session, period, totalCourseNum)
+
+
+# In[]
+#將一維list轉變成dataframe的課表
+
+def ListToSchedule(schedule):
+    """
+        input: list 
+        return: dataframe
+    """
+    schedule
+    x = pd.DataFrame ( np.reshape(schedule, (3, 15)) )
+    x = pd.concat([pd.DataFrame (['上午','下午','晚上']), x], axis=1)
+    x.columns = [['','Mon','Mon','Mon','Tue','Tue','Tue','Wed','Wed','Wed','Thu','Thu','Thu','Fri','Fri','Fri'],['','Room1','Room2','Room3','Room1','Room2','Room3','Room1','Room2','Room3','Room1','Room2','Room3','Room1','Room2','Room3']]
+    return(x)
+
+#ListToSchedule(schedule_optimized)
