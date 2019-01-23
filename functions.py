@@ -176,7 +176,7 @@ def courseArrangement(schedule, k):
         if(i%k==k-1):
             periodSum.append(temp)
             temp=0
-    weights=[0.3, 0.1, 0.6]
+    weights=[0.3, 0.6, 0.1]
     result4=0
     for i, p in enumerate(periodSum):
         result4=result4+p*weights[i]
@@ -192,7 +192,7 @@ def courseArrangement(schedule, k):
 # In[]
 # Objective Function
 def ObjFun(schedule,courseDetail, roomNum, k, RoomDetail, session, period, totalCourseNum):
-    weight=[0.3, 0.2, 0.3, 0.1]
+    weight=[0.4, 0.25, 0.25, 0.1]
     Objval=weight[0]*dailyConcentration(schedule, courseDetail, weekdays, dailyParts)+\
     weight[1]*sessionDispersion(schedule, roomNum, session, period, totalCourseNum)+\
     weight[2]*capacityDifference(schedule, RoomDetail)+\
