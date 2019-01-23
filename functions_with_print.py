@@ -58,7 +58,7 @@ def dailyConcentration(schedule, courseDetail):
     instructorReport = instructorReport.groupby('instructor').agg({"course code" : lambda x: np.mean(x/dailyParts)}).copy()
     
     result1=(100 - instructorReport['course code'].mean()*100)
-    #print("rule1: ",result1)
+    print("rule1: ",result1)
     #回傳每一位老師平均集中度的平均值 > 再 （100-集中度）
     return result1
 
@@ -89,7 +89,7 @@ def sessionDispersion(schedule, roomNum, session, period, totalCourseNum):
             periodlist.append(courseNum)
             courseNum=0
     squaresum=sum(i*i for i in periodlist) #平方和
-    #print(periodlist)
+    print(periodlist)
     #計算平方和最大值&最小值
     if totalCourseNum<period:
         maxdiv=roomNum*roomNum*(totalCourseNum/roomNum)
@@ -98,13 +98,13 @@ def sessionDispersion(schedule, roomNum, session, period, totalCourseNum):
         maxdiv=roomNum*roomNum*(session/roomNum)
         mindiv=totalCourseNum*totalCourseNum/period
         #這邊不考慮totalCourseNum>session的情況，因為這樣違背了條件限制[所有課都要被排入]
-    #print(squaresum, mindiv,maxdiv-mindiv)
+    print(squaresum, mindiv,maxdiv-mindiv)
     #將平方和量化為0~100分
     if maxdiv-mindiv==0:
         sdisp=100-(squaresum-mindiv)*100 
     else:
         sdisp=100-((squaresum-mindiv)/(maxdiv-mindiv))*100 
-    #print("rule2: ", sdisp)
+    print("rule2: ", sdisp)
     return sdisp
 
 
@@ -147,7 +147,7 @@ def capacityDifference(schedule, RoomDetail):
     else:    
         cdiffscore=100-(cdiff/dividends*100) #算出差距的百分比，距離越大分數越低
     result3=cdiffscore.mean()
-    #print("rule3: ", result3)
+    print("rule3: ", result3)
     return result3
 #capacityDifference(schedule, RoomDetail)
 # In[] 
@@ -175,7 +175,7 @@ def courseArrangement(schedule, k):
         result4=result4*100
     else:  
         result4=(result4/psum*100)
-    #print("rule4: ", result4)
+    print("rule4: ", result4)
     return result4  #加權period數除以全部period數，0~100分越大越好
 
 
@@ -189,6 +189,7 @@ def ObjFun(schedule,courseDetail, roomNum, k, RoomDetail, session, period, total
     weight[1]*sessionDispersion(schedule, roomNum, session, period, totalCourseNum)+\
     weight[2]*capacityDifference(schedule, RoomDetail)+\
     weight[3]*courseArrangement(schedule, k)
+    print('Objval:', Objval)
     return Objval
 
 #ObjFun(schedule,courseDetail, roomNum, k, RoomDetail, session, period, totalCourseNum)
@@ -213,4 +214,4 @@ def ListToSchedule(schedule):
 # In[]
 result=['306008001', '307942001', '', '306525001', '356808001', '', '307851001', '306736001', '', '307867001', '307873001', '', '356019001', '356388001', '', '356387001', '356395001', '', '356813001', '306016022', '', '306000001', '307034001', '', '306737001', '356389001', '', '307857001', '306016002', '', '356425001', '307901001', '', '356461001', '307035001', '', '356822001', '307932001', '', '306016012', '356564001', '', '307870001', '306050011', '']
 x=ObjFun(schedule,courseDetail, roomNum, k, RoomDetail, session, period, totalCourseNum)
-#print(x)
+print(x)
