@@ -1,6 +1,7 @@
 # In[] 
 import pandas as pd
 import numpy as np
+import random 
 #讀取
 courseDetail = pd.read_csv('data/course.csv')[['course code', 'Number of students', 'instructor']]
 teacherDetail= pd.read_csv('data/instructor.csv')[['i_no', 'instructor name']]
@@ -62,6 +63,10 @@ def generate(courseDetail, tNum, cNum, period):
 		value= courseDetail['course code'][x]	#value
 		teacher[key].append(value)  			#各教師的授課列表
 
+	#每個教師的排課順序亂數
+	for key in range(len(teacher)):
+		if teacher[key]!=[]:
+			teacher[key]=random.sample(teacher[key], len(teacher[key]))
 	#合併成要排入的課程list
 	query=[]
 	for order in y:
@@ -84,9 +89,6 @@ def generate(courseDetail, tNum, cNum, period):
 			break
 	return schedule
 
-print(generate(courseDetail, tNum, cNum, period))
+print("Random Initial Solution: ", generate(courseDetail, tNum, cNum, period))
 #30['306008001', '307942001', '', '306525001', '356808001', '', '307851001', '306736001', '', '307867001', '307873001', '', '356019001', '356388001', '', '356387001', '356395001', '', '356813001', '306016022', '', '306000001', '307034001', '', '306737001', '356389001', '', '307857001', '306016002', '', '356425001', '307901001', '', '356461001', '307035001', '', '356822001', '307932001', '', '306016012', '356564001', '', '307870001', '306050011', '']
 #33['306008001', '307870001', '307932001', '306525001', '307942001', '356564001', '307851001', '356808001', '306050011', '307867001', '306016022', '', '356019001', '307034001', '', '356387001', '356389001', '', '356813001', '356813002', '', '356813004', '306736001', '', '306000001', '307873001', '', '306737001', '356388001', '', '307857001', '356395001', '', '356425001', '306016002', '', '356461001', '307901001', '', '356822001', '356813003', '', '306016012', '307035001', '']
-
-
-
