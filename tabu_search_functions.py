@@ -36,6 +36,7 @@ def TabuSearch():
     '307932001','','356822001','','356389001','356019001','356564001','','307901001','356813001','','356808001','','','']
     
     
+    
     ### Initial Solution
     import test 
     courseDetail = pd.read_csv('data/course.csv')[['course code', 'Number of students', 'instructor']]
@@ -238,11 +239,11 @@ def TabuSearch():
             return neighborhood
     
         def _score(self, state):
-            return functions.ObjFun(state,courseDetail, roomNum, k, RoomDetail, session, period, totalCourseNum, weekdays, dailyParts) #填入obj. fum.
+            return functions.ObjFun(state,courseDetail, roomNum, k, RoomDetail, session, period, totalCourseNum) #填入obj. fum.
     
     
     print('Initial Solution: \n',temp_schedule_feasible)
-    print('Initial Obj. Val.: ',functions.ObjFun(InitialSolution,courseDetail, roomNum, k, RoomDetail, session, period, totalCourseNum, weekdays, dailyParts) )
+    print('Initial Obj. Val.: ',functions.ObjFun(InitialSolution,courseDetail, roomNum, k, RoomDetail, session, period, totalCourseNum) )
     
     
     ScoreRecord=[]
