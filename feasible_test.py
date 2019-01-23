@@ -4,7 +4,7 @@ course_name = []
 classroom = []
 professor_name = []
 
-with open("course.csv","r",encoding="utf-8") as fIn:
+with open("data/course.csv","r",encoding="utf-8") as fIn:
     csvIn = csv.reader(fIn)
     for line in csvIn:
         dataset.append(line)
