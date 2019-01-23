@@ -57,7 +57,6 @@ def TabuSearch():
     
     InitialSolution = test.generate(courseDetail, tNum, cNum, period)
     
-    
     ### Tabu Search
     
     ########################################################################
@@ -220,7 +219,7 @@ def TabuSearch():
         def _neighborhood(self):
             member = list(self.current)
             neighborhood = []
-            for _ in range(20): #鄰居數
+            for _ in range(50): #鄰居數
                 neighbor = deepcopy(member)
                 #SWAP:
                 for _ in range(5): # SWAP次數
@@ -247,18 +246,20 @@ def TabuSearch():
     
     
     ScoreRecord=[]
-    Schedule_optimizedTimeRecord=[]
+    Schedule_optimized=[]
     TimeRecord=[]
     
     import time
-    #for i in range(10):
+    #for i in range(1):
     start_time = time.time()
-    TSRun = TabuSearchCustomized(InitialSolution, 10, 10, max_score=None) #填入initial solution： Tabu List數, 迭代次數
-    ScoreRecord.append(TSRun.run() [1])
-    Schedule_optimizedTimeRecord.append(TSRun.run() [0])
-    TimeRecord.append(time.time() - start_time)
+    TSRun = TabuSearchCustomized(InitialSolution, 10, 30, max_score=None) #填入initial solution： Tabu List數, 迭代次數
+    TSRun = TSRun.run()
+    #print(TSRun)
+    #ScoreRecord.append(TSRun[1])
+    #Schedule_optimized.append(TSRun[0])
+    #TimeRecord.append(time.time() - start_time)
+
     
-    schedule_optimized =  TSRun.run() [0]
-    
-    return [ScoreRecord, Schedule_optimizedTimeRecord, TimeRecord]
-a = TabuSearch()
+    return TSRun[1], TSRun[0], (time.time() - start_time)
+
+#a = TabuSearch()
