@@ -25,7 +25,7 @@ def TabuSearch():
     period=weekdays*dailyParts #15 一個weekdays中，不分教室的區塊總數
     session=roomNum*weekdays*dailyParts #45 一個weekdays中，空教室的總數(一維陣列的長度)
     k=weekdays*roomNum #15 [早上、下午、晚上] 一個part中的session數(索引調整參數)
-    totalCourseNum=30
+    totalCourseNum=len(courseDetail['course code'])
     
     # testing data
     temp_schedule_simple=['306000001','','','','','','','','','','','','','','',
@@ -34,7 +34,6 @@ def TabuSearch():
     temp_schedule_feasible=['306000001','','306008001','','','306016002','356425001','','306016012','307873001','','307867001','307942001','','307870001',
      '306016022','307857001','306050011','356387001','356388001','307851001','306525001','','307035001','306736001','356395001','307034001','356461001','','306737001',
     '307932001','','356822001','','356389001','356019001','356564001','','307901001','356813001','','356808001','','','']
-    
     
     
     ### Initial Solution
@@ -239,11 +238,11 @@ def TabuSearch():
             return neighborhood
     
         def _score(self, state):
-            return functions.ObjFun(state,courseDetail, roomNum, k, RoomDetail, session, period, totalCourseNum) #填入obj. fum.
+            return functions.ObjFun(state,courseDetail, roomNum, k, RoomDetail, session, period, totalCourseNum, weekdays, dailyParts) #填入obj. fum.
     
     
     print('Initial Solution: \n',temp_schedule_feasible)
-    print('Initial Obj. Val.: ',functions.ObjFun(InitialSolution,courseDetail, roomNum, k, RoomDetail, session, period, totalCourseNum) )
+    print('Initial Obj. Val.: ',functions.ObjFun(InitialSolution,courseDetail, roomNum, k, RoomDetail, session, period, totalCourseNum, weekdays, dailyParts) )
     
     
     ScoreRecord=[]
