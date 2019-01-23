@@ -184,7 +184,7 @@ def courseArrangement(schedule, k):
 
 
 def ObjFun(schedule,courseDetail, roomNum, k, RoomDetail, session, period, totalCourseNum):
-    weight=[0.5, 0.25, 0.15, 0.05]
+    weight=[0.4, 0.4, 0.1, 0.1]
     Objval=weight[0]*dailyConcentration(schedule, courseDetail)+\
     weight[1]*sessionDispersion(schedule, roomNum, session, period, totalCourseNum)+\
     weight[2]*capacityDifference(schedule, RoomDetail)+\
@@ -192,7 +192,7 @@ def ObjFun(schedule,courseDetail, roomNum, k, RoomDetail, session, period, total
     print(Objval)
     return Objval
 
-#ObjFun(schedule,courseDetail, roomNum, k, RoomDetail, session, period, totalCourseNum)
+ObjFun(schedule,courseDetail, roomNum, k, RoomDetail, session, period, totalCourseNum)
 
 
 # In[]
