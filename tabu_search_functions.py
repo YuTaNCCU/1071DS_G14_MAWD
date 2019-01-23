@@ -25,7 +25,7 @@ def TabuSearch():
     period=weekdays*dailyParts #15 一個weekdays中，不分教室的區塊總數
     session=roomNum*weekdays*dailyParts #45 一個weekdays中，空教室的總數(一維陣列的長度)
     k=weekdays*roomNum #15 [早上、下午、晚上] 一個part中的session數(索引調整參數)
-    totalCourseNum=30
+    totalCourseNum=len(courseDetail['course code'])
     
     # testing data
     temp_schedule_simple=['306000001','','','','','','','','','','','','','','',
