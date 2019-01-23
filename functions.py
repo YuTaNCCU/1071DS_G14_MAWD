@@ -92,7 +92,7 @@ def sessionDispersion(schedule, roomNum, session, period, totalCourseNum):
     if totalCourseNum<period:
         fulfilledmax=totalCourseNum/roomNum
         mindiv=1
-    elif totalCourseNum>=session:
+    elif totalCourseNum<=session:
         fulfilledmax=session/roomNum
         mindiv=totalCourseNum/period
     else:
@@ -137,7 +137,7 @@ def capacityDifference(schedule, RoomDetail):
     rmin = schedule_Detail_3.rCapacity.min()
     cmax = schedule_Detail_3.cCapacity.max()
     cmin = schedule_Detail_3.cCapacity.min()
-    dividends=max(abs(rmax-cmin), abs(cmax-rmin))
+    dividends=max(abs(rmax-cmin), abs(cmax-rmin), abs(cmax-rmax), abs(cmin-rmin))
     
     #計算每個course 的分數
     cdiff=abs(schedule_Detail_3.rCapacity-schedule_Detail_3.cCapacity)   #差距 
