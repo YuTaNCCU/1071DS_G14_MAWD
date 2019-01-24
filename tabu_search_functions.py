@@ -37,7 +37,7 @@ def TabuSearch():
     
     
     
-    ### Initial Solution
+    ### Initial Solution 愛麗絲方法
     import test 
     courseDetail = pd.read_csv('data/course.csv')[['course code', 'Number of students', 'instructor']]
     teacherDetail= pd.read_csv('data/instructor.csv')[['i_no', 'instructor name']]
@@ -56,6 +56,10 @@ def TabuSearch():
     totalCourseNum=30
     
     InitialSolution = test.generate(courseDetail, tNum, cNum, period)
+    
+    ### Initial Solution 嗡嗡方法
+    import new_random_initial_solution as new_init_sol
+    InitialSolution = new_init_sol.get_schedule()
     
     ### Tabu Search
     
@@ -178,7 +182,7 @@ def TabuSearch():
             for i in range(self.max_steps):
                 self.cur_steps += 1
     
-                if ((i + 1) % 10 == 0) and verbose:
+                if ((i + 1) % 50 == 0) and verbose:
                     print(self)
     
                 neighborhood = self._neighborhood()
@@ -245,14 +249,14 @@ def TabuSearch():
     print('Initial Obj. Val.: ',functions.ObjFun(InitialSolution,courseDetail, roomNum, k, RoomDetail, session, period, totalCourseNum) )
     
     
-    ScoreRecord=[]
-    Schedule_optimized=[]
-    TimeRecord=[]
+    #ScoreRecord=[]
+   # Schedule_optimized=[]
+   # TimeRecord=[]
     
     import time
     #for i in range(1):
     start_time = time.time()
-    TSRun = TabuSearchCustomized(InitialSolution, 10, 30, max_score=None) #填入initial solution： Tabu List數, 迭代次數
+    TSRun = TabuSearchCustomized(InitialSolution, 10, 100, max_score=None) #填入initial solution： Tabu List數, 迭代次數
     TSRun = TSRun.run()
     #print(TSRun)
     #ScoreRecord.append(TSRun[1])
