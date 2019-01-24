@@ -6,13 +6,17 @@ Created on Wed Jan 23 23:38:50 2019
 @author: yuta_mac
 """
    
-def TabuSearch():
+def TabuSearch( InitialMethod='random',  _NumOfNeighbor=50, _NumOfSWAP=5, _NumOfTabuList=10, _MaxIteration=100 ):
+    """
+    Input: InitialMethod'random'代表隨機生成初始解； 'Greedy'代表用貪婪演算法生成初始解
+    Return: TSRun[1]: Obj. Fun.分數, TSRun[0]: 課表List, (time.time() - start_time) : 耗時
+    """
     ### Loading Package & Data
-    
     import pandas as pd
     import numpy as np
     import functions
     import feasible_test as ft
+    
     #讀取courseDetail
     courseDetail = pd.read_csv('data/course.csv')[['course code', 'Number of students', 'instructor']]
     courseDetail['course code']=courseDetail['course code'].astype(str)
@@ -35,31 +39,33 @@ def TabuSearch():
      '306016022','307857001','306050011','356387001','356388001','307851001','306525001','','307035001','306736001','356395001','307034001','356461001','','306737001',
     '307932001','','356822001','','356389001','356019001','356564001','','307901001','356813001','','356808001','','','']
     
-    
-    
-    ### Initial Solution 愛麗絲方法
-    import test 
-    courseDetail = pd.read_csv('data/course.csv')[['course code', 'Number of students', 'instructor']]
-    teacherDetail= pd.read_csv('data/instructor.csv')[['i_no', 'instructor name']]
-    courseDetail['course code']=courseDetail['course code'].astype(str)
-    RoomDetail = pd.read_csv('data/classroom.csv')[['classroom', 'cr_capacity']]
-    
-    cNum = len(courseDetail['instructor']) 	#課程總數
-    tNum = len(teacherDetail['i_no'])+1		#老師總數
-    #variables
-    roomNum=3 #教室數量
-    weekdays=5 #上課日子
-    dailyParts=3 #parts=將一天劃分為[早上、下午、晚上]
-    period=weekdays*dailyParts #15 一個weekdays中，不分教室的區塊總數
-    session=roomNum*weekdays*dailyParts #45 一個weekdays中，空教室的總數(一維陣列的長度)
-    k=weekdays*roomNum #15 [早上、下午、晚上] 一個part中的session數(索引調整參數)
-    totalCourseNum=30
-    
-    InitialSolution = test.generate(courseDetail, tNum, cNum, period)
-    
-    ### Initial Solution 嗡嗡方法
-    import new_random_initial_solution as new_init_sol
-    InitialSolution = new_init_sol.get_schedule()
+    #生成初始解 Initial Solution
+    #'random'代表隨機生成初始解； 'Greedy'代表用貪婪演算法生成初始解
+    if InitialMethod == 'Greedy':
+        ### Initial Solution 愛麗絲方法
+        import test 
+        courseDetail = pd.read_csv('data/course.csv')[['course code', 'Number of students', 'instructor']]
+        teacherDetail= pd.read_csv('data/instructor.csv')[['i_no', 'instructor name']]
+        courseDetail['course code']=courseDetail['course code'].astype(str)
+        RoomDetail = pd.read_csv('data/classroom.csv')[['classroom', 'cr_capacity']]
+        
+        cNum = len(courseDetail['instructor']) 	#課程總數
+        tNum = len(teacherDetail['i_no'])+1		#老師總數
+        #variables
+        roomNum=3 #教室數量
+        weekdays=5 #上課日子
+        dailyParts=3 #parts=將一天劃分為[早上、下午、晚上]
+        period=weekdays*dailyParts #15 一個weekdays中，不分教室的區塊總數
+        session=roomNum*weekdays*dailyParts #45 一個weekdays中，空教室的總數(一維陣列的長度)
+        k=weekdays*roomNum #15 [早上、下午、晚上] 一個part中的session數(索引調整參數)
+        totalCourseNum=30
+        
+        #InitialSolution = test.generate(courseDetail, tNum, cNum, period)
+        
+    elif InitialMethod == 'random':
+        ### Initial Solution 嗡嗡方法
+        import new_random_initial_solution as new_init_sol
+        InitialSolution = new_init_sol.get_schedule()
     
     ### Tabu Search
     
@@ -123,7 +129,7 @@ def TabuSearch():
             return ('TABU SEARCH: \n' +
                     'CURRENT STEPS: %d \n' +
                     'BEST SCORE: %f \n' +
-                    'BEST MEMBER: %s \n\n') % \
+                    'BEST MEMBER: \n %s \n\n') % \
                    (self.cur_steps, self._score(self.best), str(self.best))
     
         def __repr__(self):
@@ -223,10 +229,10 @@ def TabuSearch():
         def _neighborhood(self):
             member = list(self.current)
             neighborhood = []
-            for _ in range(50): #鄰居數
+            for _ in range( _NumOfNeighbor ): #鄰居數
                 neighbor = deepcopy(member)
                 #SWAP:
-                for _ in range(5): # SWAP次數
+                for _ in range( _NumOfSWAP ): # SWAP次數
                     NeighborList = list(range(session)) #[1,2,...44,45]
                     session1 = choice(NeighborList) #抽第一個位置
                     NeighborList.remove(session1)  #抽過的位置從list中移除
@@ -245,9 +251,9 @@ def TabuSearch():
             return functions.ObjFun(state,courseDetail, roomNum, k, RoomDetail, session, period, totalCourseNum) #填入obj. fum.
     
     
-    print('Initial Solution: \n',temp_schedule_feasible)
+  
     print('Initial Obj. Val.: ',functions.ObjFun(InitialSolution,courseDetail, roomNum, k, RoomDetail, session, period, totalCourseNum) )
-    
+    print('Initial Solution: \n',temp_schedule_feasible, '\n\n')
     
     #ScoreRecord=[]
    # Schedule_optimized=[]
@@ -256,7 +262,7 @@ def TabuSearch():
     import time
     #for i in range(1):
     start_time = time.time()
-    TSRun = TabuSearchCustomized(InitialSolution, 10, 100, max_score=None) #填入initial solution： Tabu List數, 迭代次數
+    TSRun = TabuSearchCustomized(InitialSolution, _NumOfTabuList, _MaxIteration, max_score=None) #填入initial solution： Tabu List數, 迭代次數
     TSRun = TSRun.run()
     #print(TSRun)
     #ScoreRecord.append(TSRun[1])
@@ -266,4 +272,4 @@ def TabuSearch():
     
     return TSRun[1], TSRun[0], (time.time() - start_time)
 
-#a = TabuSearch()
+#a = TabuSearch(InitialMethod='random' )
