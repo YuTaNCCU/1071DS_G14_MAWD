@@ -1,9 +1,28 @@
 # 1071DS_G14_MAWD
 
+# 檔案名稱 & 功能
+
+## functions.py
+Objective Function()：目標函數
+ListToSchedule()：將一維list轉變成dataframe的課表
+feasible_test()：測試某解是否為可行解
+get_schedule()：生成initial solution (randomly)
+generate()：生成initial solution (greedily)
+
+## genetic_algorithm_functions.py
+Genetic algorithm的流程
+
+## tabu_search_functions.py
+Tabu search的流程
+
+## main.ipynb
+分別執行ＧＡ及ＴＳ十次的分數、時間及最佳解
+
 決策科學 final
 ===
 Google Doc 共編
 https://docs.google.com/document/d/18crK7lUqpjKy1OtneuQHkQyf6lldcqRK5JMGlJIwJc0/edit?fbclid=IwAR05wxzy7KdWIRah29iPHdlDQAeoBxvySg0IDsFB0rpDbo4vfNTpEdnXwgs
+
 ===
 程式碼共編
 https://colab.research.google.com/drive/1__JM4b3cDpwIyptyBWbpMLkKv9UO2kIu?fbclid=IwAR3TDHKTH2o-H3kcKI8-kDz2xa9M3JNnRgSwpcp3rG810q5pmFYW_Uzja7s#scrollTo=515qI2zaWd3c
