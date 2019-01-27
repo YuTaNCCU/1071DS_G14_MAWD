@@ -1,4 +1,4 @@
-# In[] 
+# In[] 參數設定
 import pandas as pd
 import numpy as np
 #讀取courseDetail
@@ -27,8 +27,7 @@ for i in range(session):
 #schedule=['306000001','','306008001','','','306016002','356425001','','306016012','307873001','','307867001','307942001','','307870001','306016022','307857001','306050011','356387001','356388001','307851001','306525001','','307035001','306736001','356395001','307034001','356461001','','306737001','307932001','','356822001','','356389001','356019001','356564001','','307901001','356813001','','356808001','','','']
 
 
-# In[] 
-#1 教授單日授課集中度(例如：老師一天從早上直接上課到晚上)
+# In[] #1 教授單日授課集中度(例如：老師一天從早上直接上課到晚上)
 """
 Input: schedule(list), 含授課教師課程細節的courseDetail(dictionary)
 Output: dailyConc(number) 0~1000分 : (number of sessions - number of days + 1)/ number of sessions
@@ -64,8 +63,7 @@ def dailyConcentration(schedule, courseDetail, weekdays, dailyParts):
 
 #dailyConcentration(schedule, courseDetail)
 
-# In[] 
-#2 每段時間的課程離散度(取各Period課程數的平方和計算)
+# In[] #2 每段時間的課程離散度(取各Period課程數的平方和計算)
 """
 Input: 課表schedule(list), 教室數量roomNum(int), 區塊數period(int), 課程總數totalCourseNum(int) 
 Output: 課程離散度sdisp(number) 0~100分
@@ -120,8 +118,7 @@ def sessionDispersion(schedule, roomNum, session, period, totalCourseNum):
     print(sdisp)
     """
 
-# In[] 
-#3 教室與人數有剛好match    
+# In[] #3 教室與人數有剛好match    
 """
 Input: 一維度課表schedule(list), 計算索引的參數k(number)
 Output: 人限差距分數cdiffscore(number) 0~1000分
@@ -161,8 +158,7 @@ def capacityDifference(schedule, RoomDetail):
     #print("rule3: ", result3)
     return result3
 
-# In[] 
-#4 課程數量：下午>早上>晚上
+# In[] #4 課程數量：下午>早上>晚上
 """
 Input: 一維度課表schedule(list), 計算索引的參數k(number)
 Output: period數所佔比例
@@ -189,8 +185,7 @@ def courseArrangement(schedule, k):
     #print("rule4: ", result4)
     return result4  
 
-# In[]
-# Objective Function
+# In[] Objective Function
 def ObjFun(schedule,courseDetail, roomNum, k, RoomDetail, session, period, totalCourseNum):
     weight=[0.4, 0.25, 0.25, 0.1]
     Objval=weight[0]*dailyConcentration(schedule, courseDetail, weekdays, dailyParts)+\
@@ -202,8 +197,7 @@ def ObjFun(schedule,courseDetail, roomNum, k, RoomDetail, session, period, total
 #ObjFun(schedule,courseDetail, roomNum, k, RoomDetail, session, period, totalCourseNum)
 
 
-# In[]
-#將一維list轉變成dataframe的課表
+# In[] 將一維list轉變成dataframe的課表
 def ListToSchedule(schedule):
     """
         input: list 
@@ -217,8 +211,7 @@ def ListToSchedule(schedule):
 
 #ListToSchedule(schedule_optimized)
 
-# In[]
-# feasible_test
+# In[] feasible_test
     
 import csv
 dataset = []
@@ -334,9 +327,7 @@ def feasible_test(test_schedule):
 
     return True
     
-# In[] 
-
-#生成initial solution (greedily) 
+# In[] 生成initial solution (greedily) 
     
 import pandas as pd
 import numpy as np
@@ -432,9 +423,7 @@ print("Random Initial Solution: ", generate(courseDetail, tNum, cNum, period))
 #30['306008001', '307942001', '', '306525001', '356808001', '', '307851001', '306736001', '', '307867001', '307873001', '', '356019001', '356388001', '', '356387001', '356395001', '', '356813001', '306016022', '', '306000001', '307034001', '', '306737001', '356389001', '', '307857001', '306016002', '', '356425001', '307901001', '', '356461001', '307035001', '', '356822001', '307932001', '', '306016012', '356564001', '', '307870001', '306050011', '']
 #33['306008001', '307870001', '307932001', '306525001', '307942001', '356564001', '307851001', '356808001', '306050011', '307867001', '306016022', '', '356019001', '307034001', '', '356387001', '356389001', '', '356813001', '356813002', '', '356813004', '306736001', '', '306000001', '307873001', '', '306737001', '356388001', '', '307857001', '356395001', '', '356425001', '306016002', '', '356461001', '307901001', '', '356822001', '356813003', '', '306016012', '307035001', '']
 
-# In[]
-
-# 生成initial solution (randomly) 
+# In[] 生成initial solution (randomly) 
 
 import feasible_test as ft
 #import feasible_test_with_print_error as fterr
@@ -481,7 +470,3 @@ def get_schedule():
                         break
                     else:
                         pass
-
-# In[]
-
-# In[]
