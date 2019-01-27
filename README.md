@@ -2,20 +2,20 @@
 
 # 檔案名稱 & 功能
 
-## functions.py
-Objective Function()：目標函數
-ListToSchedule()：將一維list轉變成dataframe的課表
-feasible_test()：測試某解是否為可行解
-get_schedule()：生成initial solution (randomly)
-generate()：生成initial solution (greedily)
+### functions.py
+* Objective Function()：目標函數
+* ListToSchedule()：將一維list轉變成dataframe的課表
+* feasible_test()：測試某解是否為可行解
+* get_schedule()：生成initial solution (randomly)
+* generate()：生成initial solution (greedily)
 
-## genetic_algorithm_functions.py
+### genetic_algorithm_functions.py
 Genetic algorithm的流程
 
-## tabu_search_functions.py
+### tabu_search_functions.py
 Tabu search的流程
 
-## main.ipynb
+### main.ipynb
 分別執行ＧＡ及ＴＳ十次的分數、時間及最佳解
 
 決策科學 final
