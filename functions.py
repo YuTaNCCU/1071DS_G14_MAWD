@@ -424,9 +424,6 @@ print("Random Initial Solution: ", generate(courseDetail, tNum, cNum, period))
 #33['306008001', '307870001', '307932001', '306525001', '307942001', '356564001', '307851001', '356808001', '306050011', '307867001', '306016022', '', '356019001', '307034001', '', '356387001', '356389001', '', '356813001', '356813002', '', '356813004', '306736001', '', '306000001', '307873001', '', '306737001', '356388001', '', '307857001', '356395001', '', '356425001', '306016002', '', '356461001', '307901001', '', '356822001', '356813003', '', '306016012', '307035001', '']
 
 # In[] 生成initial solution (randomly) 
-
-import feasible_test as ft
-#import feasible_test_with_print_error as fterr
 import random
 import functions as func
 import pandas as pd
@@ -456,7 +453,7 @@ all_course = list(pd.read_csv('data/course.csv')['course code'].astype(str))
 def get_schedule():
     blank_schedule = ['']*45
     while(True):
-        if(ft.feasible_test(blank_schedule)):
+        if(feasible_test(blank_schedule)):
             # print("------ 生成初始課表{}成功! 得分為: {} ------".format(i,get_score(blank_schedule)))
             # print(blank_schedule)
             return blank_schedule

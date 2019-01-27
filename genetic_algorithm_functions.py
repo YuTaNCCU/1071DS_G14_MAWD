@@ -202,23 +202,8 @@ def get_one_ans_print_details():
     
     return best_schedule,best_score
 
-best_schedule_list = []
-best_score_list = []
-calculate_time_list = []
 
-for i in range(10):
-    print("------ 第 {} 次找解 ------".format(i+1))
-    start_time = time.time()
-    best_schedule,best_score = get_one_ans()
-#     best_schedule,best_score = get_one_ans_print_details()
-    end_time = time.time()
+
+
+
     
-    best_schedule_list.append(best_schedule)
-    best_score_list.append(best_score)
-    calculate_time_list.append(end_time - start_time)
-
-print(best_score_list)
-print(calculate_time_list)
-
-# print(best_schedule_list[best_score.index(max(best_score))])
-print(best_schedule_list[8])

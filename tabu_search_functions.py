@@ -15,7 +15,6 @@ def TabuSearch( InitialMethod='random',  _NumOfNeighbor=50, _NumOfSWAP=5, _NumOf
     import pandas as pd
     import numpy as np
     import functions
-    import feasible_test as ft
     
     #讀取courseDetail
     courseDetail = pd.read_csv('data/course.csv')[['course code', 'Number of students', 'instructor']]
